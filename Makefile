@@ -1,24 +1,17 @@
 TARGET = xedgewarp
-
 SDIR = src
 IDIR = include
 ODIR = obj
-
-LIBS = -lxcb -lxcb-util -lxcb-randr
 
 CC = gcc
 CFLAGS += -I$(IDIR)
 CFLAGS += -std=c99
 CFLAGS += -Wall -Wundef -Wshadow -pedantic
+LIBS = -lxcb -lxcb-util -lxcb-randr
 
-_INCS = globals.h randr.h types.h
-INCS = $(patsubst %,$(IDIR)/%,$(_INCS))
-
-_SRCS = randr.c xedgewarp.c
-SRCS = $(patsubst %,$(SDIR)/%,$(_SRCS))
-
-_OBJS = $(_SRCS:.c=.o)
-OBJS = $(patsubst %,$(ODIR)/%,$(_OBJS))
+INCS = $(wildcard $(IDIR)/*.h)
+SRCS = $(wildcard $(SDIR)/*.c)
+OBJS = $(patsubst %,$(ODIR)/%,$(notdir $(SRCS:.c=.o)))
 
 .PHONY: all
 all: $(TARGET)
