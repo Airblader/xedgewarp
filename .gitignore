@@ -1,2 +1,2 @@
 xedgewarp
-obj/
+obj/*.o
