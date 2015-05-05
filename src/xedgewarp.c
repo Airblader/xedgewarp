@@ -26,6 +26,9 @@ static void initialize(void) {
 
 int main(void) {
     initialize();
+
+    randr_query_outputs();
+    
     xcb_disconnect(connection);
     exit(EXIT_SUCCESS);
 }
