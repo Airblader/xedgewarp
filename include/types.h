@@ -2,6 +2,8 @@
 #pragma once
 
 #include <sys/queue.h>
+#include <xcb/xcb.h>
+#include <xcb/randr.h>
 
 typedef struct Rect {
     uint32_t x;
