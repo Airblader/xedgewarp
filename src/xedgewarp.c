@@ -36,3 +36,14 @@ void initialize(void) {
     xcb_screen_t *screen = xcb_aux_get_screen(connection, display);
     root = screen->root;
 }
+
+/*
+ * Register for events we need on the given window.
+ */
+void window_register_events(xcb_window_t window) {
+    const uint32_t mask = XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_POINTER_MOTION;
+
+    xcb_void_cookie_t cookie = xcb_change_window_attributes_checked(connection,
+        window, XCB_CW_EVENT_MASK, (uint32_t[]) { mask });
+    xcb_request_check_or_bail(cookie, "could not register for events on window, bailing out.");
+}
