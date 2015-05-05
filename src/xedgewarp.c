@@ -5,6 +5,7 @@
 #include <err.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_aux.h>
+#include "xedgewarp.h"
 #include "randr.h"
 #include "types.h"
 #include "globals.h"
@@ -13,7 +14,19 @@
 xcb_connection_t *connection;
 xcb_window_t root;
 
-static void initialize(void) {
+int main(void) {
+    initialize();
+
+    randr_query_outputs();
+    
+    xcb_disconnect(connection);
+    exit(EXIT_SUCCESS);
+}
+
+/*
+ * Initialize the X server connection.
+ */
+void initialize(void) {
     int display;
     connection = xcb_connect(NULL, &display);
     if (xcb_connection_has_error(connection)) {
@@ -22,13 +35,4 @@ static void initialize(void) {
 
     xcb_screen_t *screen = xcb_aux_get_screen(connection, display);
     root = screen->root;
-}
-
-int main(void) {
-    initialize();
-
-    randr_query_outputs();
-    
-    xcb_disconnect(connection);
-    exit(EXIT_SUCCESS);
 }
