@@ -7,14 +7,3 @@
  * Initialize the X server connection.
  */
 void initialize(void);
-
-/**
- * Register for the events we need on the given window.
- */
-void window_register_events(xcb_window_t window);
-
-/**
- * Register the root window and all its current children.
- * This function temporarily grabs the server.
- */
-void window_initialize_tree(void);
