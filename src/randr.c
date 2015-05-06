@@ -73,3 +73,21 @@ void randr_query_outputs(void) {
 
     FREE(reply);
 }
+
+/*
+ * Returns the output that contains this position.
+ * Never returns NULL.
+ */
+Output *randr_get_output_containing(Position pointer) {
+    // TODO implement this
+    return NULL;
+}
+
+/*
+ * Returns the output in the given direction to which the pointer
+ * should be warped. Returns NULL if there is no output.
+ */
+Output *randr_next_output_in_direction(Position pointer, Direction direction) {
+    // TODO implement this
+    return NULL;
+}

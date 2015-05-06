@@ -12,10 +12,17 @@ void bail(char *message) {
 }
 
 /*
+ * Checks the cookie for errors and returns the result.
+ */
+bool xcb_return_request_check(xcb_void_cookie_t cookie) {
+    xcb_generic_error_t *error = xcb_request_check(connection, cookie);
+    return error == NULL;
+}
+
+/*
  * Checks the cookie for errors and bails out if one was returned.
  */
 void xcb_request_check_or_bail(xcb_void_cookie_t cookie, char *message) {
-    xcb_generic_error_t *error = xcb_request_check(connection, cookie);
-    if (error != NULL)
+    if (!xcb_return_request_check(cookie))
         bail(message);
 }
