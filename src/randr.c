@@ -79,8 +79,19 @@ void randr_query_outputs(void) {
  * Never returns NULL.
  */
 Output *randr_get_output_containing(Position pointer) {
-    // TODO implement this
-    return NULL;
+    Output *current;
+    TAILQ_FOREACH(current, &outputs, outputs) {
+        if (pointer.x >= current->rect.x && pointer.x < current->rect.x + current->rect.width &&
+            pointer.y >= current->rect.y && pointer.y < current->rect.y + current->rect.height) {
+
+            DLOG("Found output %d containing position %d / %d", current->id,
+                pointer.x, pointer.y);
+            return current;
+        }
+    }
+
+    /* If we get here, something went horribly wrong. */
+    assert(false);
 }
 
 /*
