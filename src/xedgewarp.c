@@ -7,6 +7,7 @@
 #include <xcb/xcb_aux.h>
 #include "xedgewarp.h"
 #include "randr.h"
+#include "event.h"
 #include "types.h"
 #include "globals.h"
 #include "util.h"
@@ -19,7 +20,9 @@ int main(void) {
 
     randr_query_outputs();
     window_initialize_tree();
-    
+
+    event_enter_loop();
+
     xcb_disconnect(connection);
     exit(EXIT_SUCCESS);
 }

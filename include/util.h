@@ -1,6 +1,7 @@
 // vim:ts=4:sw=4:expandtab
 #pragma once
 
+#include <stdlib.h>
 #include <xcb/xcb.h>
 
 #define FREE(p)          \
