@@ -71,7 +71,8 @@ void event_enter_loop(void) {
  * This is used to register our events on the created window.
  */
 void event_handle_create_notify(xcb_create_notify_event_t *event) {
-    // TODO
+    DLOG("Received CreateNotify event for window %d", event->window);
+    event_register_window(event->window);
 }
 
 /*
