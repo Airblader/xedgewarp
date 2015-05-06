@@ -57,9 +57,34 @@ void pointer_warp_to_adjacent_output(Position pointer, Direction direction) {
  * have when warped from one output to the other.
  */
 Position pointer_transform_position(Position pointer, Output *from, Output *to, Direction direction) {
-    // TODO implement this.
-    return (Position) {
+    Position coordinates = {
         .x = 0,
         .y = 0
     };
+
+    // TODO simplify this
+    // TODO avoid jumping back and forth in an endless loop
+    if (direction == D_TOP) {
+        coordinates.y = to->rect.y + to->rect.height - 1 - 1 /* TODO */;
+        coordinates.x = to->rect.x;
+        if (to->rect.x <= pointer.x)
+            coordinates.x += to->rect.width - 1;
+    } else if (direction == D_LEFT) {
+        coordinates.x = to->rect.x + to->rect.width - 1 - 1 /* TODO */;
+        coordinates.y = to->rect.y;
+        if (to->rect.y <= pointer.y)
+            coordinates.y += to->rect.height - 1;
+    } else if (direction == D_BOTTOM) {
+        coordinates.y = to->rect.y + 1 /* TODO */;
+        coordinates.x = to->rect.x;
+        if (to->rect.x <= pointer.x)
+            coordinates.x += to->rect.width - 1;
+    } else if (direction == D_RIGHT) {
+        coordinates.x = to->rect.x + 1 /* TODO */;
+        coordinates.y = to->rect.y;
+        if (to->rect.y <= pointer.y)
+            coordinates.y += to->rect.height - 1;
+    }
+
+    return coordinates;
 }
