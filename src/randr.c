@@ -1,13 +1,5 @@
 // vim:ts=4:sw=4:expandtab
-
-#include <stdlib.h>
-#include <sys/queue.h>
-#include <xcb/xcb.h>
-#include <xcb/randr.h>
-#include "randr.h"
-#include "globals.h"
-#include "types.h"
-#include "util.h"
+#include "all.h"
 
 /* List of RandR outputs. */
 struct outputs_head outputs = TAILQ_HEAD_INITIALIZER(outputs);

@@ -1,16 +1,5 @@
 // vim:ts=4:sw=4:expandtab
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <err.h>
-#include <xcb/xcb.h>
-#include <xcb/xcb_aux.h>
-#include "xedgewarp.h"
-#include "randr.h"
-#include "event.h"
-#include "types.h"
-#include "globals.h"
-#include "util.h"
+#include "all.h"
 
 xcb_connection_t *connection;
 xcb_window_t root;

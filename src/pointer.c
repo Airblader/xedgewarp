@@ -1,6 +1,5 @@
 // vim:ts=4:sw=4:expandtab
-
-#include "pointer.h"
+#include "all.h"
 
 Direction pointer_touches_border(Position pointer) {
     // TODO implement this

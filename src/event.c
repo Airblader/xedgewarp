@@ -1,10 +1,5 @@
 // vim:ts=4:sw=4:expandtab
-
-#include <xcb/xcb.h>
-#include "event.h"
-#include "globals.h"
-#include "util.h"
-#include "pointer.h"
+#include "all.h"
 
 /*
  * Register for events we need on the given window.

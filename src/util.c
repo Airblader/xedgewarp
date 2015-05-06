@@ -1,10 +1,5 @@
 // vim:ts=4:sw=4:expandtab
-
-#include <stdlib.h>
-#include <err.h>
-#include <xcb/xcb.h>
-#include "util.h"
-#include "globals.h"
+#include "all.h"
 
 /*
  * Closes the X connection and errors out with the given message.
