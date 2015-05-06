@@ -99,6 +99,28 @@ Output *randr_get_output_containing(Position pointer) {
  * should be warped. Returns NULL if there is no output.
  */
 Output *randr_next_output_in_direction(Position pointer, Direction direction) {
-    // TODO implement this
-    return NULL;
+    Output *output = NULL;
+
+    Output *current;
+    // TODO this might have to be a smarter algorithm.
+    TAILQ_FOREACH(current, &outputs, outputs) {
+        Rect *rect = &(current->rect);
+
+        if ((direction == D_LEFT && rect->x + rect->width <= pointer.x) ||
+            (direction == D_RIGHT && rect->x > pointer.x)) {
+
+            output = current;
+            break;
+        }
+
+        if ((direction == D_TOP && rect->y + rect->height <= pointer.y) ||
+            (direction == D_BOTTOM && rect->y > pointer.y)) {
+
+            output = current;
+            break;
+        }
+    }
+
+    DLOG("Found output %d in direction %d.", output == NULL ? -1 : output->id, direction);
+    return output;
 }
