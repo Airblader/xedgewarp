@@ -5,6 +5,11 @@
 #include <xcb/xcb.h>
 #include <xcb/randr.h>
 
+typedef struct Position {
+    uint32_t x;
+    uint32_t y;
+} Position;
+
 typedef struct Rect {
     uint32_t x;
     uint32_t y;
@@ -21,3 +26,11 @@ typedef struct Output {
 } Output;
 
 TAILQ_HEAD(outputs_head, Output) outputs_head;
+
+typedef enum Direction {
+    D_NONE,
+    D_TOP,
+    D_LEFT,
+    D_BOTTOM,
+    D_RIGHT
+} Direction;

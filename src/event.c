@@ -4,6 +4,7 @@
 #include "event.h"
 #include "globals.h"
 #include "util.h"
+#include "pointer.h"
 
 /*
  * Register for events we need on the given window.
@@ -81,5 +82,15 @@ void event_handle_create_notify(xcb_create_notify_event_t *event) {
  * output.
  */
 void event_handle_motion_notify(xcb_motion_notify_event_t *event) {
-    // TODO
+    Position pointer = {
+        .x = event->root_x,
+        .y = event->root_y
+    };
+
+    /* check if we are touching the border of the current output */
+    Direction direction = pointer_touches_border(pointer);
+    if (direction == D_NONE)
+        return;
+
+    pointer_warp_to_adjacent_output(pointer, direction);
 }
