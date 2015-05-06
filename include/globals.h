@@ -10,3 +10,6 @@ extern xcb_connection_t *connection;
 
 /** The root window of this display. */
 extern xcb_window_t root;
+
+/** The list of RandR outputs. */
+extern struct outputs_head outputs;
