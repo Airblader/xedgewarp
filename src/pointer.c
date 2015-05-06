@@ -1,6 +1,11 @@
 // vim:ts=4:sw=4:expandtab
 #include "all.h"
 
+/*
+ * Returns D_NONE if the pointer is not on the edge of
+ * the current output. Otherwise, it returns on which
+ * edge the pointer is touching.
+ */
 Direction pointer_touches_border(Position pointer) {
     Output *current;
     TAILQ_FOREACH(current, &outputs, outputs) {
@@ -19,6 +24,9 @@ Direction pointer_touches_border(Position pointer) {
     return D_NONE;
 }
 
+/*
+ * Warps the pointer to the output in the given direction.
+ */
 void pointer_warp_to_adjacent_output(Position pointer, Direction direction) {
     // TODO implement this
 }
