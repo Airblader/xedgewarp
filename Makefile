@@ -14,7 +14,7 @@ SRCS = $(wildcard $(SDIR)/*.c)
 OBJS = $(patsubst %,$(ODIR)/%,$(notdir $(SRCS:.c=.o)))
 
 .PHONY: all
-all: $(TARGET)
+all: clean $(TARGET)
 
 .PHONY: $(TARGET)
 $(TARGET): $(OBJS)
