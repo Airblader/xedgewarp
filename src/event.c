@@ -13,32 +13,38 @@ void event_register_window(xcb_window_t window) {
     xcb_request_check_or_bail(cookie, "Could not register for events on window, bailing out.");
 }
 
+static void event_initialize_tree_on(xcb_window_t window) {
+    /* Register the given window. */
+    event_register_window(window);
+
+    DLOG("Querying the tree for window %d", window);
+    xcb_query_tree_reply_t *reply = xcb_query_tree_reply(connection, xcb_query_tree(connection, window), NULL);
+    if (reply == NULL)
+        bail("Could not query the tree, bailing out.");
+
+    /* Register all children as well. */
+    xcb_window_t *children = xcb_query_tree_children(reply);
+    for (int i = 0; i < xcb_query_tree_children_length(reply); i++) {
+        event_initialize_tree_on(children[i]);
+    }
+
+    FREE(reply);
+}
+
 /*
  * Register the root window and all its current children.
  * This function temporarily grabs the server.
  */
 void event_initialize_tree(void) {
-    DLOG("Registering root window.");
-    /* We grab the server for registering ourselves to the root window to make sure that
-     * we will at least receive a CREATE_NOTIFY for any window that comes into existence
-     * while we query the current tree. */
+    /* We grab the server for this to avoid race conditions. */
     xcb_grab_server(connection);
-    event_register_window(root);
+    event_initialize_tree_on(root);
     xcb_ungrab_server(connection);
+
+    /* Make sure we push all these requests to X as quickly as possible. */
     xcb_flush(connection);
 
-    DLOG("Querying and registering the current tree.");
-    /* Query the tree and register ourselves onto every window that already exists. */
-    xcb_query_tree_reply_t *reply = xcb_query_tree_reply(connection, xcb_query_tree(connection, root), NULL);
-    if (reply == NULL)
-        bail("Could not query the current tree, bailing out.");
-
-    xcb_window_t *children = xcb_query_tree_children(reply);
-    for (int i = 0; i < xcb_query_tree_children_length(reply); i++)
-        event_register_window(children[i]);
-
     DLOG("Tree has been initialized.");
-    FREE(reply);
 }
 
 /*
