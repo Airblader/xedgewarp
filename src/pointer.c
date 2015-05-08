@@ -50,7 +50,7 @@ Direction pointer_touches_border(Position pointer) {
 void pointer_warp_to_adjacent_output(Position pointer, Direction direction) {
     Output *output = randr_next_output_in_direction(pointer, direction);
     if (output == NULL) {
-        DLOG("At position %d / %d, there is no more output in direction %d.",
+        TLOG("At position %d / %d, there is no more output in direction %d.",
             pointer.x, pointer.y, direction);
         return;
     }

@@ -84,7 +84,7 @@ Output *randr_safely_get_output_containing(Position pointer) {
         if (pointer.x >= current->rect.x && pointer.x < current->rect.x + current->rect.width &&
             pointer.y >= current->rect.y && pointer.y < current->rect.y + current->rect.height) {
 
-            DLOG("Found output %d containing position %d / %d", current->id,
+            TLOG("Found output %d containing position %d / %d", current->id,
                 pointer.x, pointer.y);
             return current;
         }
@@ -133,6 +133,6 @@ Output *randr_next_output_in_direction(Position pointer, Direction direction) {
         }
     }
 
-    DLOG("Found output %d in direction %d.", output == NULL ? -1 : output->id, direction);
+    TLOG("Found output %d in direction %d.", output == NULL ? -1 : output->id, direction);
     return output;
 }

@@ -88,10 +88,10 @@ void event_handle_motion_notify(xcb_motion_notify_event_t *event) {
         .y = event->root_y
     };
 
-    /* check if we are touching the border of the current output */
     Direction direction = pointer_touches_border(pointer);
     if (direction == D_NONE)
         return;
 
+    DLOG("Touching a dead border segment at %d / %d.", pointer.x, pointer.y);
     pointer_warp_to_adjacent_output(pointer, direction);
 }
