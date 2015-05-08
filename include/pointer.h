@@ -4,11 +4,10 @@
 #include "types.h"
 
 /**
- * Returns D_NONE if the pointer is not on the edge of
- * the current output. Otherwise, it returns on which
- * edge the pointer is touching.
+ * Checks whether the given pointer is touching a "dead" border segment.
+ * A border segment is considered dead when it is not directly neighboring
+ * another output.
  */
-// TODO only return direction if it's a "dead" border
 Direction pointer_touches_border(Position pointer);
 
 /**
