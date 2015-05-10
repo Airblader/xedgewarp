@@ -5,7 +5,7 @@ ODIR = obj
 
 CC = gcc
 CFLAGS += -I$(IDIR)
-CFLAGS += -std=c99
+CFLAGS += -std=gnu99
 CFLAGS += -Wall -Wundef -Wshadow
 LIBS = -lxcb -lxcb-util -lxcb-randr
 
