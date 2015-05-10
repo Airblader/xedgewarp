@@ -13,3 +13,6 @@ extern xcb_window_t root;
 
 /** The list of RandR outputs. */
 extern struct outputs_head outputs;
+
+/* Global configuration. */
+extern Config config;

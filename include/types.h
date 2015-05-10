@@ -34,3 +34,6 @@ typedef enum Direction {
     D_BOTTOM,
     D_RIGHT
 } Direction;
+
+typedef struct Config {
+} Config;

@@ -1,11 +1,26 @@
 // vim:ts=4:sw=4:expandtab
 #include "all.h"
+#include <getopt.h>
 
 xcb_connection_t *connection;
 xcb_window_t root;
+Config config;
 
-int main(void) {
+static void parse_args(int argc, char *argv[]) {
+    int c;
+    while ((c = getopt(argc, argv, "o:")) != -1) {
+        switch (c) {
+            case 'o':
+                break;
+            default:
+                bail("Unknown command line arguments.");
+        }
+    }
+}
+
+int main(int argc, char *argv[]) {
     initialize();
+    parse_args(argc, argv);
 
     randr_query_outputs();
     event_initialize_tree();
