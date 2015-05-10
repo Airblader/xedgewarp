@@ -36,4 +36,6 @@ typedef enum Direction {
 } Direction;
 
 typedef struct Config {
+    /* Disables RandR, which is useful for testing purposes. */
+    bool disable_randr;
 } Config;
