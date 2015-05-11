@@ -6,9 +6,7 @@ use xewtest;
 
 run_xedgewarp(outputs => [ '400x200+0+0', '400x200+400+100' ]);
 
-sleep 2;
 warp_pointer(399, 50);
-sleep 2;
 
 my $pointer = get_pointer;
 ok($pointer->{x} == 401, 'pointer has been moved to the output to the right');

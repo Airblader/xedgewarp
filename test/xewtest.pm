@@ -25,6 +25,7 @@ if ($x->has_error) {
 
 sub wait_for_startup {
     # TODO
+    sleep 2;
 }
 
 sub run_xedgewarp {
