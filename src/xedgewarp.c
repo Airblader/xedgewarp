@@ -20,7 +20,14 @@ static void parse_args(int argc, char *argv[]) {
     }
 }
 
+static void on_xedgewarp_exit(void) {
+    if (connection != NULL)
+        xcb_disconnect(connection);
+}
+
 int main(int argc, char *argv[]) {
+    atexit(on_xedgewarp_exit);
+
     initialize();
     parse_args(argc, argv);
 
@@ -29,7 +36,6 @@ int main(int argc, char *argv[]) {
 
     event_enter_loop();
 
-    xcb_disconnect(connection);
     exit(EXIT_SUCCESS);
 }
 
