@@ -34,3 +34,8 @@ typedef enum Direction {
     D_BOTTOM,
     D_RIGHT
 } Direction;
+
+typedef struct Config {
+    /* Disables RandR, which is useful for testing purposes. */
+    bool disable_randr;
+} Config;

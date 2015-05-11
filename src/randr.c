@@ -48,6 +48,11 @@ static void randr_handle_output(xcb_randr_output_t id, xcb_randr_get_output_info
  */
 // TODO Make this work for updating the list, not just initializing it.
 void randr_query_outputs(void) {
+    if (config.disable_randr) {
+        DLOG("Skipping querying RandR outputs as RandR is disabled.");
+        return;
+    }
+
     DLOG("Querying RandR outputs...");
     xcb_randr_get_screen_resources_current_reply_t *reply = xcb_randr_get_screen_resources_current_reply(
         connection, xcb_randr_get_screen_resources_current(connection, root), NULL );
@@ -72,6 +77,34 @@ void randr_query_outputs(void) {
     }
 
     FREE(reply);
+}
+
+/*
+ * Set up fake RandR outputs from a string.
+ */
+void randr_from_fake_outputs(char *outputs_str) {
+    /* We use some fake IDs starting at 990. We never use this ID anyway. */
+    int id = 990;
+
+    char *current;
+    while ((current = strsep(&outputs_str, ","))) {
+        Output *new = calloc(sizeof(Output), 1);
+        if (new == NULL) {
+            ELOG("Could not alloc space for fake output %s, skipping it.", current);
+            continue;
+        }
+
+        new->id = id++;
+
+        new->rect.width = atoi(strsep(&current, "x"));
+        new->rect.height = atoi(strsep(&current, "+"));
+        new->rect.x = atoi(strsep(&current, "+"));
+        new->rect.y = atoi(strsep(&current, "+"));
+
+        TAILQ_INSERT_TAIL(&outputs, new, outputs);
+        DLOG("Added fake output %d (x = %d / y = %d / w = %d / h = %d) to list of outputs.", new->id,
+            new->rect.x, new->rect.y, new->rect.width, new->rect.height);
+    }
 }
 
 /*
