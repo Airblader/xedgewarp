@@ -1,27 +1,47 @@
 // vim:ts=4:sw=4:expandtab
 #include "all.h"
 
-/*
- * Returns D_NONE if the pointer is not on the edge of
- * the current output. Otherwise, it returns on which
- * edge the pointer is touching.
- */
-Direction pointer_touches_border(Position pointer) {
-    Output *current;
-    TAILQ_FOREACH(current, &outputs, outputs) {
-        Rect rect = current->rect;
+static Direction pointer_touches_any_border(Position pointer) {
+    Output *output = randr_get_output_containing(pointer);
+    Rect *rect = &(output->rect);
 
-        if (pointer.y == rect.y && pointer.x >= rect.x && pointer.x < rect.x + rect.width)
-            return D_TOP;
-        if (pointer.x == rect.x && pointer.y >= rect.y && pointer.y < rect.y + rect.height)
-            return D_LEFT;
-        if (pointer.y + 1 == rect.y + rect.height && pointer.x >= rect.x && pointer.x < rect.x + rect.width)
-            return D_BOTTOM;
-        if (pointer.x + 1 == rect.x + rect.width && pointer.y >= rect.y && pointer.y < rect.y + rect.height)
-            return D_RIGHT;
-    }
+    if (pointer.y == rect->y && pointer.x >= rect->x && pointer.x < rect->x + rect->width)
+        return D_TOP;
+    if (pointer.x == rect->x && pointer.y >= rect->y && pointer.y < rect->y + rect->height)
+        return D_LEFT;
+    if (pointer.y + 1 == rect->y + rect->height && pointer.x >= rect->x && pointer.x < rect->x + rect->width)
+        return D_BOTTOM;
+    if (pointer.x + 1 == rect->x + rect->width && pointer.y >= rect->y && pointer.y < rect->y + rect->height)
+        return D_RIGHT;
 
     return D_NONE;
+}
+
+/*
+ * Checks whether the given pointer is touching a "dead" border segment.
+ * A border segment is considered dead when it is not directly neighboring
+ * another output.
+ */
+Direction pointer_touches_border(Position pointer) {
+    /* First, we check if the pointer is touching any border of the output it is on,
+     * whether or not there is a neighboring output. */
+    Direction direction = pointer_touches_any_border(pointer);
+
+    /* Pointer is not on any border, so we can stop looking. */
+    if (direction == D_NONE)
+        return D_NONE;
+
+    /* Otherwise, we need to check if the border segment is "dead", i.e., there is no
+     * directly neighboring output as in such a case we don't need to do anything. */
+    Position fake_position = pointer;
+    if (direction == D_LEFT || direction == D_RIGHT)
+        fake_position.x += direction == D_LEFT ? -1 : 1;
+    else if (direction == D_TOP || direction == D_BOTTOM)
+        fake_position.y += direction == D_TOP ? -1 : 1;
+    else
+        bail("Congratulations, you found a bug. Please report it!");
+
+    return randr_safely_get_output_containing(fake_position) == NULL ? direction : D_NONE;
 }
 
 /*
@@ -30,7 +50,7 @@ Direction pointer_touches_border(Position pointer) {
 void pointer_warp_to_adjacent_output(Position pointer, Direction direction) {
     Output *output = randr_next_output_in_direction(pointer, direction);
     if (output == NULL) {
-        DLOG("At position %d / %d, there is no more output in direction %d.",
+        TLOG("At position %d / %d, there is no more output in direction %d.",
             pointer.x, pointer.y, direction);
         return;
     }

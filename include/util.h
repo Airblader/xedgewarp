@@ -13,6 +13,14 @@
         }                \
     } while (0)
 
+#if 0
+#define TLOG(message, ...)        \
+    DLOG(message, ##__VA_ARGS__);
+#else
+#define TLOG(message, ...) \
+    do {} while (0)
+#endif
+
 #define DLOG(message, ...)                                                         \
     do {                                                                           \
         printf("[%s:%d] DEBUG: " message "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
