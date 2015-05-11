@@ -7,7 +7,6 @@ use warnings;
 use utf8;
 use v5.10;
 
-use Test::More;
 use X11::XCB::Connection;
 
 use Exporter 'import';
@@ -24,6 +23,10 @@ if ($x->has_error) {
     die "Cannot connect to X on display 99!\n";
 }
 
+sub wait_for_startup {
+    # TODO
+}
+
 sub run_xedgewarp {
     my %args = @_;
     $args{outputs} //= [ '400x200+0+0', '400x200+400+0' ];
@@ -37,6 +40,8 @@ sub run_xedgewarp {
         exec '../xedgewarp -o "' . join(',', @{$args{outputs}}) . '"';
         exit 1;
     }
+
+    wait_for_startup;
 }
 
 sub warp_pointer {
