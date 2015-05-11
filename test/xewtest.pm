@@ -24,12 +24,12 @@ if ($x->has_error) {
 
 sub run_xedgewarp {
     my %args = @_;
-    $args{outputs} //= [ '800x600+0+0', '800x600+0+0' ];
+    $args{outputs} //= [ '400x200+0+0', '400x200+400+0' ];
 
     $pid = fork;
     if ($pid == 0) {
         $ENV{DISPLAY} = ":99";
-        exec "/home/ingo/repos/xedgewarp/xedgewarp -o 800x600+0+0";
+        exec '../xedgewarp -o "' . join(',', @{$args{outputs}}) . '"';
         exit 1;
     }
 }
