@@ -4,12 +4,84 @@
 use Test::More;
 use xewtest;
 
-run_xedgewarp(outputs => [ '400x200+0+0', '400x200+400+100' ]);
+my $pointer;
 
-warp_pointer(399, 50);
+###################################################################################################
+# Test warping left / right with two outputs.
+###################################################################################################
 
-my $pointer = get_pointer;
-ok($pointer->{x} == 401, 'pointer has been moved to the output to the right');
-ok($pointer->{y} == 100, 'pointer has been moved down to the top of the new output');
+# Layout:
+# #######
+#
+# +---+
+# | 1 +---+
+# +---+ 2 |
+#     +---+
+#
+run_xedgewarp(outputs => [
+    '200x200+0+0',
+    '200x200+200+100'
+]);
+
+# A: Left edge
+warp_pointer(200, 250);
+$pointer = get_pointer;
+ok($pointer->{x} == 198, '');
+ok($pointer->{y} == 199, '');
+
+# B: Right edge
+warp_pointer(199, 50);
+$pointer = get_pointer;
+ok($pointer->{x} == 201, '');
+ok($pointer->{y} == 100, '');
+
+exit_xedgewarp;
+
+###################################################################################################
+# Test warping each of the four edges in a setup with three outputs.
+###################################################################################################
+
+# Layout:
+# #######
+#
+#   +---+
+#   | 1 +---+
+# +-+-+-+ 2 |
+# | 3 | +---+
+# +---+
+#
+run_xedgewarp(outputs => [
+    '200x200+100+0',
+    '200x200+300+100',
+    '200x200+0+200'
+]);
+
+# A: Top edge
+#warp_pointer(50, 200);
+#$pointer = get_pointer;
+#ok($pointer->{x} == 101, '');
+#ok($pointer->{y} == 199, '');
+
+# B: Left edge
+#warp_pointer(300, 250);
+#$pointer = get_pointer;
+#ok($pointer->{x} == 299, '');
+#ok($pointer->{y} == 199, '');
+
+# C: Bottom edge
+#warp_pointer();
+#$pointer = get_pointer;
+#ok($pointer->{x} == , '');
+#ok($pointer->{y} == , '');
+
+# A: Right edge
+#warp_pointer();
+#$pointer = get_pointer;
+#ok($pointer->{x} == , '');
+#ok($pointer->{y} == , '');
+
+exit_xedgewarp;
+
+###################################################################################################
 
 done_testing;

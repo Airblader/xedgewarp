@@ -12,6 +12,7 @@ use X11::XCB::Connection;
 use Exporter 'import';
 our @EXPORT = qw(
     run_xedgewarp
+    exit_xedgewarp
     warp_pointer
     get_pointer
     $x
@@ -45,6 +46,12 @@ sub run_xedgewarp {
     wait_for_startup;
 }
 
+sub exit_xedgewarp {
+    if (defined $pid && $pid != 0) {
+        kill(15, $pid);
+    }
+}
+
 sub warp_pointer {
     my ($pos_x, $pos_y) = (@_);
     $x->root->warp_pointer($pos_x, $pos_y);
@@ -60,9 +67,7 @@ sub get_pointer {
 }
 
 END {
-    if (defined $pid && $pid != 0) {
-        kill(15, $pid);
-    }
+    exit_xedgewarp;
 }
 
 1;
