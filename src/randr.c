@@ -111,7 +111,7 @@ void randr_from_fake_outputs(char *outputs_str) {
  * Returns the output that contains this position.
  * Returns NULL if the position is not on any output.
  */
-Output *randr_safely_get_output_containing(Position pointer) {
+Output *randr_get_output_containing(Position pointer) {
     Output *current;
     TAILQ_FOREACH(current, &outputs, outputs) {
         if (pointer.x >= current->rect.x && pointer.x < current->rect.x + current->rect.width &&
@@ -124,19 +124,6 @@ Output *randr_safely_get_output_containing(Position pointer) {
     }
 
     return NULL;
-}
-
-/*
- * Returns the output that contains this position.
- * Never returns NULL.
- */
-Output *randr_get_output_containing(Position pointer) {
-    Output *output = randr_safely_get_output_containing(pointer);
-    if (output != NULL)
-        return output;
-
-    ELOG("Pointer %d / %d is not on any output, bailing.", pointer.x, pointer.y);
-    assert(false);
 }
 
 /*

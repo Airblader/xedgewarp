@@ -3,6 +3,9 @@
 
 static Direction pointer_touches_any_border(Position pointer) {
     Output *output = randr_get_output_containing(pointer);
+    if (output == NULL)
+        return D_NONE;
+
     Rect *rect = &(output->rect);
 
     if (pointer.y == rect->y && pointer.x >= rect->x && pointer.x < rect->x + rect->width)
@@ -41,7 +44,7 @@ Direction pointer_touches_border(Position pointer) {
     else
         bail("Congratulations, you found a bug. Please report it!");
 
-    return randr_safely_get_output_containing(fake_position) == NULL ? direction : D_NONE;
+    return randr_get_output_containing(fake_position) == NULL ? direction : D_NONE;
 }
 
 /*
@@ -57,6 +60,10 @@ void pointer_warp_to_adjacent_output(Position pointer, Direction direction) {
 
     /* Determine where the pointer needs to be warped to. */
     Output *current = randr_get_output_containing(pointer);
+    if (current == NULL) {
+        ELOG("Cannot determine current output.");
+        return;
+    }
     Position target = pointer_transform_position(pointer, current, output, direction);
 
     /* Let's do the pointer warp, again! */
