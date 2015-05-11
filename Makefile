@@ -23,6 +23,12 @@ $(TARGET): $(OBJS)
 $(ODIR)/%.o: $(SDIR)/%.c $(INCS)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
+.PHONY: test
+test: all
+	cd test/; \
+	perl run.pl; \
+	cd ../
+
 .PHONY: clean
 clean:
 	$(RM) $(TARGET) $(OBJS)
