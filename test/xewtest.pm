@@ -26,6 +26,9 @@ sub run_xedgewarp {
     my %args = @_;
     $args{outputs} //= [ '400x200+0+0', '400x200+400+0' ];
 
+    # warp the pointer so we have a deterministic start scenario
+    $x->root->warp_pointer(0, 0);
+
     $pid = fork;
     if ($pid == 0) {
         $ENV{DISPLAY} = ":99";
