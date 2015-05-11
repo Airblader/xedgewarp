@@ -13,6 +13,8 @@ use X11::XCB::Connection;
 use Exporter 'import';
 our @EXPORT = qw(
     run_xedgewarp
+    warp_pointer
+    get_pointer
     $x
 );
 
@@ -35,6 +37,20 @@ sub run_xedgewarp {
         exec '../xedgewarp -o "' . join(',', @{$args{outputs}}) . '"';
         exit 1;
     }
+}
+
+sub warp_pointer {
+    my ($pos_x, $pos_y) = (@_);
+    $x->root->warp_pointer($pos_x, $pos_y);
+}
+
+sub get_pointer {
+    my $cookie = $x->root->_conn->query_pointer($x->root->id);
+    my $reply = $x->root->_conn->query_pointer_reply($cookie->{sequence});
+    return {
+        'x' => $reply->{root_x},
+        'y' => $reply->{root_y}
+    };
 }
 
 END {
