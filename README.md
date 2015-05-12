@@ -19,7 +19,7 @@ If this is something you want, but your setup lacks -- xedgewarp is the tool for
 
 ## Credits
 
-Having learned a lot by contributing to [https://github.com/i3/i3](i3/i3), this is also where a lot of the credit should go; namely to its author Michael Stapelberg. Credit for X11::XCB, which is used for testing, goes to the same person.
+Having learned a lot by contributing to [i3/i3](https://github.com/i3/i3), this is also where a lot of the credit should go; namely to its author Michael Stapelberg. Credit for X11::XCB, which is used for testing, goes to the same person.
 
 ## Installation
 
