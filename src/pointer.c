@@ -1,23 +1,33 @@
 // vim:ts=4:sw=4:expandtab
 #include "all.h"
 
+/*
+ * Returns a bitmask of directions in which the pointer is touching
+ * the output border. This function does not check whether the
+ * border segment is "dead".
+ */
 static Direction pointer_touches_any_border(Position pointer) {
     Output *output = randr_get_output_containing(pointer);
     if (output == NULL)
         return D_NONE;
 
     Rect *rect = &(output->rect);
+    int result = D_NONE;
 
     if (pointer.y == rect->y && pointer.x >= rect->x && pointer.x < rect->x + rect->width)
-        return D_TOP;
+        result |= D_TOP;
     if (pointer.x == rect->x && pointer.y >= rect->y && pointer.y < rect->y + rect->height)
-        return D_LEFT;
+        result |= D_LEFT;
     if (pointer.y + 1 == rect->y + rect->height && pointer.x >= rect->x && pointer.x < rect->x + rect->width)
-        return D_BOTTOM;
+        result |= D_BOTTOM;
     if (pointer.x + 1 == rect->x + rect->width && pointer.y >= rect->y && pointer.y < rect->y + rect->height)
-        return D_RIGHT;
+        result |= D_RIGHT;
 
-    return D_NONE;
+    /* Remove D_NONE again if we found something. */
+    if (result & D_TOP || result & D_LEFT || result & D_BOTTOM || result & D_RIGHT)
+        result &= ~D_NONE;
+
+    return result;
 }
 
 /*
@@ -28,20 +38,23 @@ static Direction pointer_touches_any_border(Position pointer) {
 Direction pointer_touches_border(Position pointer) {
     /* First, we check if the pointer is touching any border of the output it is on,
      * whether or not there is a neighboring output. */
-    Direction direction = pointer_touches_any_border(pointer);
+    int directions = pointer_touches_any_border(pointer);
 
     /* Pointer is not on any border, so we can stop looking. */
-    if (direction == D_NONE)
+    if (directions == D_NONE)
         return D_NONE;
 
     /* Otherwise, we need to check if the border segment is "dead", i.e., there is no
      * directly neighboring output as in such a case we don't need to do anything. */
     Position fake_position = pointer;
-    if (direction == D_LEFT || direction == D_RIGHT)
+    Direction direction;
+    if (directions & D_LEFT || directions & D_RIGHT) {
+        direction = directions & D_LEFT ? D_LEFT : D_RIGHT;
         fake_position.x += direction == D_LEFT ? -1 : 1;
-    else if (direction == D_TOP || direction == D_BOTTOM)
+    } else if (directions & D_TOP || directions & D_BOTTOM) {
+        direction = directions & D_TOP ? D_TOP : D_BOTTOM;
         fake_position.y += direction == D_TOP ? -1 : 1;
-    else
+    } else
         bail("Congratulations, you found a bug. Please report it!");
 
     return randr_get_output_containing(fake_position) == NULL ? direction : D_NONE;
