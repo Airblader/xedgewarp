@@ -26,13 +26,13 @@ run_xedgewarp(outputs => [
 # A: Left edge
 warp_pointer(200, 250);
 $pointer = get_pointer;
-is($pointer->{x}, 198, 'pointer is warped to the neighboring output (left)');
+is($pointer->{x}, 199, 'pointer is warped to the neighboring output (left)');
 is($pointer->{y}, 199, 'pointer is warped to the bottom of the new output');
 
 # B: Right edge
 warp_pointer(199, 50);
 $pointer = get_pointer;
-is($pointer->{x}, 201, 'pointer is warped to the neighboring output (right)');
+is($pointer->{x}, 200, 'pointer is warped to the neighboring output (right)');
 is($pointer->{y}, 100, 'pointer is warped to the top of the new output');
 
 exit_xedgewarp;
@@ -59,13 +59,13 @@ run_xedgewarp(outputs => [
 warp_pointer(250, 200);
 $pointer = get_pointer;
 is($pointer->{x}, 199, 'pointer is warped to the neighboring output (top)');
-is($pointer->{y}, 198, 'pointer is warped to the right of the new output');
+is($pointer->{y}, 199, 'pointer is warped to the right of the new output');
 
 # B: Bottom edge
 warp_pointer(50, 199);
 $pointer = get_pointer;
 is($pointer->{x}, 100, 'pointer is warped to the neighboring output (bottom)');
-is($pointer->{y}, 201, 'pointer is warped to the left of the new output');
+is($pointer->{y}, 200, 'pointer is warped to the left of the new output');
 
 exit_xedgewarp;
 

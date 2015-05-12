@@ -89,25 +89,24 @@ Position pointer_transform_position(Position pointer, Output *from, Output *to, 
         .y = 0
     };
 
-    // TODO simplify this
     // TODO avoid jumping back and forth in an endless loop
     if (direction == D_TOP) {
-        coordinates.y = to->rect.y + to->rect.height - 1 - 1 /* TODO */;
+        coordinates.y = to->rect.y + to->rect.height - 1;
         coordinates.x = to->rect.x;
         if (to->rect.x <= pointer.x)
             coordinates.x += to->rect.width - 1;
     } else if (direction == D_LEFT) {
-        coordinates.x = to->rect.x + to->rect.width - 1 - 1 /* TODO */;
+        coordinates.x = to->rect.x + to->rect.width - 1;
         coordinates.y = to->rect.y;
         if (to->rect.y <= pointer.y)
             coordinates.y += to->rect.height - 1;
     } else if (direction == D_BOTTOM) {
-        coordinates.y = to->rect.y + 1 /* TODO */;
+        coordinates.y = to->rect.y;
         coordinates.x = to->rect.x;
         if (to->rect.x <= pointer.x)
             coordinates.x += to->rect.width - 1;
     } else if (direction == D_RIGHT) {
-        coordinates.x = to->rect.x + 1 /* TODO */;
+        coordinates.x = to->rect.x;
         coordinates.y = to->rect.y;
         if (to->rect.y <= pointer.y)
             coordinates.y += to->rect.height - 1;
