@@ -25,7 +25,7 @@ if ($x->has_error) {
 }
 
 sub wait_for_startup {
-    # TODO
+    # TODO find an appropriate way to wait
     sleep 2;
 }
 
