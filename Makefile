@@ -25,7 +25,7 @@ $(ODIR)/%.o: $(SDIR)/%.c $(INCS)
 
 .PHONY: test
 test: all
-	cd test/; \
+	@cd test/; \
 	perl run.pl; \
 	cd ../
 
