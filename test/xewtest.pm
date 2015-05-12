@@ -38,6 +38,9 @@ sub run_xedgewarp {
 
     $pid = fork;
     if ($pid == 0) {
+        close STDOUT;
+        close STDERR;
+
         $ENV{DISPLAY} = ":99";
         exec '../xedgewarp -o "' . join(',', @{$args{outputs}}) . '"';
         exit 1;
