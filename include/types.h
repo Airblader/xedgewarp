@@ -28,11 +28,11 @@ typedef struct Output {
 TAILQ_HEAD(outputs_head, Output) outputs_head;
 
 typedef enum Direction {
-    D_NONE,
-    D_TOP,
-    D_LEFT,
-    D_BOTTOM,
-    D_RIGHT
+    D_NONE = 0,
+    D_TOP = 1 << 0,
+    D_LEFT = 1 << 1,
+    D_BOTTOM = 1 << 2,
+    D_RIGHT = 1 << 3
 } Direction;
 
 typedef struct Config {
