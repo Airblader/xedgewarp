@@ -27,7 +27,7 @@ run_xedgewarp(outputs => [
 warp_pointer(199, 0);
 $pointer = get_pointer;
 is($pointer->{x}, 200, 'pointer is warped to the output on the right despite also touching the top border');
-is($pointer->{y}, 100, 'pointer is warped to the bottom of the new output');
+is($pointer->{y}, 100, 'pointer is warped to the top of the new output');
 
 exit_xedgewarp;
 
