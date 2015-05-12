@@ -51,6 +51,9 @@ void event_initialize_tree(void) {
  * Enter the X event loop.
  */
 void event_enter_loop(void) {
+    /* This output is important for tests. */
+    DLOG("Entering event loop.");
+
     xcb_generic_event_t *event;
     while ((event = xcb_wait_for_event(connection))) {
         switch (event->response_type & ~0x80) {

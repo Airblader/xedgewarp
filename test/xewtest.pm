@@ -24,11 +24,6 @@ if ($x->has_error) {
     die "Cannot connect to X on display 99!\n";
 }
 
-sub wait_for_startup {
-    # TODO find an appropriate way to wait
-    sleep 2;
-}
-
 sub run_xedgewarp {
     my %args = @_;
     $args{outputs} //= [ '400x200+0+0', '400x200+400+0' ];
@@ -36,17 +31,19 @@ sub run_xedgewarp {
     # warp the pointer so we have a deterministic start scenario
     $x->root->warp_pointer(0, 0);
 
-    $pid = fork;
+    $pid = open XEWOUT, '-|';
     if ($pid == 0) {
-        close STDOUT;
-        close STDERR;
-
         $ENV{DISPLAY} = ":99";
-        exec '../xedgewarp -o "' . join(',', @{$args{outputs}}) . '"';
+
+        open STDERR, '>&STDOUT';
+        # we use stdbuf (coreutils) to disable buffering
+        exec 'stdbuf', '-o', '0', '-e', '0', '../xedgewarp', '-o', join(',', @{$args{outputs}});
         exit 1;
     }
 
-    wait_for_startup;
+    while (<XEWOUT>) {
+        return if /Entering event loop/;
+    }
 }
 
 sub exit_xedgewarp {

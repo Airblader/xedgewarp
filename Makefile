@@ -32,3 +32,4 @@ test: all
 .PHONY: clean
 clean:
 	$(RM) $(TARGET) $(OBJS)
+	$(RM) test/GLOB*
