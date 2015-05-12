@@ -7,8 +7,10 @@ use utf8;
 use v5.10;
 use IPC::System::Simple qw(system);
 
-my @tests = <t/*.t>;
 my $pid;
+
+my @tests = @ARGV;
+@tests = <t/*.t> if @tests == 0;
 
 sub wait_for_x {
     while (1) {
