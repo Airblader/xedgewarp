@@ -134,7 +134,7 @@ Output *randr_next_output_in_direction(Position pointer, Direction direction) {
     Output *output = NULL;
 
     Output *current;
-    // TODO this might have to be a smarter algorithm.
+    // TODO ensure that the output is actually touching the current one
     TAILQ_FOREACH(current, &outputs, outputs) {
         Rect *rect = &(current->rect);
 
