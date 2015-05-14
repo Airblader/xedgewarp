@@ -110,11 +110,7 @@ void pointer_warp_to_adjacent_output(Position pointer, Direction direction) {
         target.x, target.y, output->id);
 }
 
-/*
- * Takes the given position and transforms it to the position it should
- * have when warped from one output to the other.
- */
-Position pointer_transform_position(Position pointer, Output *from, Output *to, Direction direction) {
+static Position pointer_transform_position_closest(Position pointer, Output *from, Output *to, Direction direction) {
     Position coordinates = {
         .x = 0,
         .y = 0
@@ -143,4 +139,45 @@ Position pointer_transform_position(Position pointer, Output *from, Output *to, 
     }
 
     return coordinates;
+}
+
+static Position pointer_transform_position_relative(Position pointer, Output *from, Output *to, Direction direction) {
+    /* To initially get to the correct output, we borrow the logic here and adapt afterwards. */
+    Position coordinates = pointer_transform_position_closest(pointer, from, to, direction);
+
+    float percent;
+    switch (direction) {
+        case D_TOP:
+        case D_BOTTOM:
+            percent = (pointer.x - from->rect.x) / (float) from->rect.width;
+            coordinates.x = to->rect.x + percent * to->rect.width;
+            break;
+        case D_LEFT:
+        case D_RIGHT:
+            percent = (pointer.y - from->rect.y) / (float) from->rect.height;
+            coordinates.y = to->rect.y + percent * to->rect.height;
+            break;
+        default:
+            ELOG("Unknown direction %d.", direction);
+            break;
+    }
+
+    return coordinates;
+}
+
+/*
+ * Takes the given position and transforms it to the position it should
+ * have when warped from one output to the other.
+ */
+Position pointer_transform_position(Position pointer, Output *from, Output *to, Direction direction) {
+    switch (config.warp_mode) {
+        case WM_CLOSEST:
+            return pointer_transform_position_closest(pointer, from, to, direction);
+        case WM_RELATIVE:
+            return pointer_transform_position_relative(pointer, from, to, direction);
+        default:
+            bail("Unhandled warp mode, bailing out.");
+            // never reached
+            return (Position) { .x = 0, .y = 0 };
+    }
 }

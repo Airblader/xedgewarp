@@ -35,7 +35,17 @@ typedef enum Direction {
     D_RIGHT = 1 << 3
 } Direction;
 
+typedef enum warp_mode_t {
+    /* Warp only as far as necessary. */
+    WM_CLOSEST = 0,
+    /* Warp relative to the position before warping. */
+    WM_RELATIVE = 1
+} warp_mode_t;
+
 typedef struct Config {
     /* Disables RandR, which is useful for testing purposes. */
     bool disable_randr;
+
+    /* Defines how the pointer should be warped. */
+    warp_mode_t warp_mode;
 } Config;

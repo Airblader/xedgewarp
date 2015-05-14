@@ -8,8 +8,17 @@ Config config;
 
 static void parse_args(int argc, char *argv[]) {
     int c;
-    while ((c = getopt(argc, argv, "o:")) != -1) {
+    while ((c = getopt(argc, argv, "m:o:")) != -1) {
         switch (c) {
+            case 'm':
+                if (strcasecmp(optarg, "closest") == 0)
+                    config.warp_mode = WM_CLOSEST;
+                else if (strcasecmp(optarg, "relative") == 0)
+                    config.warp_mode = WM_RELATIVE;
+                else
+                    bail("Unknown warp mode, bailing out.");
+
+                break;
             case 'o':
                 config.disable_randr = true;
                 fake_outputs_create_outputs(optarg);
