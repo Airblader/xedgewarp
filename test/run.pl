@@ -13,15 +13,19 @@ my @tests = @ARGV;
 @tests = <t/*.t> if @tests == 0;
 
 sub wait_for_x {
+    my $display = substr $ENV{XEWDISPLAY}, 1;
     while (1) {
-        last if -S "/tmp/.X11-unix/X99";
+        last if -S "/tmp/.X11-unix/X$display";
     } 
 }
 
 sub start_x_server {
+    $ENV{XEWDISPLAY} //= ":99";
+    return if $ENV{XEWDISPLAY} eq $ENV{DISPLAY};
+
     $pid = fork;
     if ($pid == 0) {
-        exec "Xephyr :99 -screen 800x600 -nolisten tcp";
+        exec "Xephyr", $ENV{XEWDISPLAY}, "-screen", "800x600", "-nolisten", "tcp";
         exit 1;
     }
 
@@ -29,7 +33,9 @@ sub start_x_server {
 }
 
 sub stop_x_server {
-    kill(15, $pid);
+    if (defined $pid) {
+        kill(15, $pid);
+    }
 }
 
 start_x_server();

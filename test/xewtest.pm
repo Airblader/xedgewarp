@@ -19,9 +19,9 @@ our @EXPORT = qw(
 );
 
 my $pid;
-our $x = X11::XCB::Connection->new(display => ":99");
+our $x = X11::XCB::Connection->new(display => $ENV{XEWDISPLAY});
 if ($x->has_error) {
-    die "Cannot connect to X on display 99!\n";
+    die "Cannot connect to X on display $ENV{XEWDISPLAY}!\n";
 }
 
 sub run_xedgewarp {
@@ -33,7 +33,7 @@ sub run_xedgewarp {
 
     $pid = open XEWOUT, '-|';
     if ($pid == 0) {
-        $ENV{DISPLAY} = ":99";
+        $ENV{DISPLAY} = $ENV{XEWDISPLAY};
 
         open STDERR, '>&STDOUT';
         # we use stdbuf (coreutils) to disable buffering
