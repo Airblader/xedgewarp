@@ -33,6 +33,9 @@ $pointer = get_pointer;
 is($pointer->{x}, 200, 'pointer is warped to next output (x)');
 is($pointer->{y}, 199, 'pointer is warped to output 2 (y)');
 
+# reset pointer to become eligible for warping again
+warp_pointer(100, 300);
+
 # B: Below half, warp to output 3
 warp_pointer(199, 301);
 $pointer = get_pointer;

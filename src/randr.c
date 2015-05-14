@@ -131,12 +131,47 @@ static bool randr_neighbors_in_direction(Output *first_output, Output *second_ou
  * Returns either first or second, depending on which one is closer to the given pointer.
  * If either one is NULL, the other one is used.
  */
-static Output *randr_get_output_closer_to(Position pointer, Output *first, Output *second) {
+static Output *randr_get_output_closer_to(Position pointer, Direction direction,
+        Output *first, Output *second) {
     if (first == NULL || second == NULL)
         return first == NULL ? second : first;
 
-    // TODO implement this.
-    return first;
+    int32_t d_first = 0,
+             d_second = 0;
+    switch (direction) {
+        case D_TOP:
+        case D_BOTTOM:
+            d_first = MIN(
+                ABS((int32_t) pointer.x - (int32_t) first->rect.x),
+                ABS((int32_t) pointer.x - (int32_t) (first->rect.x + first->rect.width - 1))
+            );
+
+            d_second = MIN(
+                ABS((int32_t) pointer.x - (int32_t) second->rect.x),
+                ABS((int32_t) pointer.x - (int32_t) (second->rect.x + second->rect.width - 1))
+            );
+
+            break;
+        case D_LEFT:
+        case D_RIGHT:
+            d_first = MIN(
+                ABS((int32_t) pointer.y - (int32_t) first->rect.y),
+                ABS((int32_t) pointer.y - (int32_t) (first->rect.y + first->rect.height))
+            );
+
+            d_second = MIN(
+                ABS((int32_t) pointer.y - (int32_t) second->rect.y),
+                ABS((int32_t) pointer.y - (int32_t) (second->rect.y + second->rect.height))
+            );
+
+            break;
+        default:
+            ELOG("Unknown direction %d.", direction);
+            return NULL;
+    }
+
+    DLOG("Metric of two outputs: first (%p) = %d, second (%p) = %d.", first, d_first, second, d_second);
+    return d_first < d_second ? first : second;
 }
 
 /*
@@ -154,7 +189,7 @@ Output *randr_next_output_in_direction(Output *from, Position pointer, Direction
 
         /* Determine whether this output is better than the one we found
          * already (or, if we have none yet, use it). */
-        best = randr_get_output_closer_to(pointer, best, output);
+        best = randr_get_output_closer_to(pointer, direction, best, output);
     }
 
     return best;

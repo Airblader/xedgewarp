@@ -13,6 +13,9 @@
         }                \
     } while (0)
 
+#define ABS(x) ((x) < 0) ? -(x) : (x)
+#define MIN(a, b) ((a) < (b)) ? (a) : (b)
+
 #if 0
 #define TLOG(message, ...)        \
     DLOG(message, ##__VA_ARGS__);
