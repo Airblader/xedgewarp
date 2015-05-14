@@ -18,7 +18,7 @@ void randr_query_outputs(void);
 Output *randr_get_output_containing(Position pointer);
 
 /**
- * Returns the output in the given direction to which the pointer
- * should be warped. Returns NULL if there is no output.
+ * Returns the next output in the given direction relative to the specified
+ * output. Returns NULL if no such output exists.
  */
-Output *randr_next_output_in_direction(Position pointer, Direction direction);
+Output *randr_next_output_in_direction(Output *from, Direction direction);

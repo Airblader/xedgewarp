@@ -99,32 +99,44 @@ Output *randr_get_output_containing(Position pointer) {
 }
 
 /*
- * Returns the output in the given direction to which the pointer
- * should be warped. Returns NULL if there is no output.
+ * Returns true if and only if
+ *  - the second output lies (fully) in the given direction relative to the first output and
+ *  - both outputs are touching (no gap in between).
  */
-Output *randr_next_output_in_direction(Position pointer, Direction direction) {
-    Output *output = NULL;
-
-    Output *current;
-    // TODO ensure that the output is actually touching the current one
-    TAILQ_FOREACH(current, &outputs, outputs) {
-        Rect *rect = &(current->rect);
-
-        if ((direction == D_LEFT && rect->x + rect->width <= pointer.x) ||
-            (direction == D_RIGHT && rect->x > pointer.x)) {
-
-            output = current;
-            break;
-        }
-
-        if ((direction == D_TOP && rect->y + rect->height <= pointer.y) ||
-            (direction == D_BOTTOM && rect->y > pointer.y)) {
-
-            output = current;
-            break;
-        }
+static bool randr_is_next_in_direction(Output *first_output, Output *second_output, Direction direction) {
+    if (first_output == NULL || second_output == NULL) {
+        ELOG("One of outputs %p / %p is NULL, stopping here.", first_output, second_output);
+        return false;
     }
 
-    TLOG("Found output %d in direction %d.", output == NULL ? -1 : output->id, direction);
-    return output;
+    Rect *first = &(first_output->rect);
+    Rect *second = &(second_output->rect);
+
+    switch (direction) {
+        case D_TOP:
+            return second->y + second->height == first->y;
+        case D_LEFT:
+            return second->x + second->width == first->x;
+        case D_BOTTOM:
+            return randr_is_next_in_direction(second_output, first_output, D_TOP);
+        case D_RIGHT:
+            return randr_is_next_in_direction(second_output, first_output, D_LEFT);
+        default:
+            ELOG("Received unknown value %d and don't know what to do with it.", direction);
+            return false;
+    }
+}
+
+/*
+ * Returns the next output in the given direction relative to the specified
+ * output. Returns NULL if no such output exists.
+ */
+Output *randr_next_output_in_direction(Output *from, Direction direction) {
+    Output *output;
+    TAILQ_FOREACH(output, &outputs, outputs) {
+        if (randr_is_next_in_direction(from, output, direction))
+            return output;
+    }
+
+    return NULL;
 }

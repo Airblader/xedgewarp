@@ -64,7 +64,13 @@ Direction pointer_touches_border(Position pointer) {
  * Warps the pointer to the output in the given direction.
  */
 void pointer_warp_to_adjacent_output(Position pointer, Direction direction) {
-    Output *output = randr_next_output_in_direction(pointer, direction);
+    Output *current = randr_get_output_containing(pointer);
+    if (current == NULL) {
+        ELOG("Cannot determine current output.");
+        return;
+    }
+
+    Output *output = randr_next_output_in_direction(current, direction);
     if (output == NULL) {
         TLOG("At position %d / %d, there is no more output in direction %d.",
             pointer.x, pointer.y, direction);
@@ -72,11 +78,6 @@ void pointer_warp_to_adjacent_output(Position pointer, Direction direction) {
     }
 
     /* Determine where the pointer needs to be warped to. */
-    Output *current = randr_get_output_containing(pointer);
-    if (current == NULL) {
-        ELOG("Cannot determine current output.");
-        return;
-    }
     Position target = pointer_transform_position(pointer, current, output, direction);
 
     /* Let's do the pointer warp, again! */
