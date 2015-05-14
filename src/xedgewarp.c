@@ -12,7 +12,7 @@ static void parse_args(int argc, char *argv[]) {
         switch (c) {
             case 'o':
                 config.disable_randr = true;
-                randr_from_fake_outputs(optarg);
+                fake_outputs_create_outputs(optarg);
                 fake_outputs_visualize();
                 break;
             default:

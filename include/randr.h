@@ -12,11 +12,6 @@
 void randr_query_outputs(void);
 
 /**
- * Set up fake RandR outputs from a string.
- */
-void randr_from_fake_outputs(char *outputs_str);
-
-/**
  * Returns the output that contains this position.
  * Returns NULL if the position is not on any output.
  */

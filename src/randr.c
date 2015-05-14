@@ -80,34 +80,6 @@ void randr_query_outputs(void) {
 }
 
 /*
- * Set up fake RandR outputs from a string.
- */
-void randr_from_fake_outputs(char *outputs_str) {
-    /* We use some fake IDs starting at 990. We never use this ID anyway. */
-    int id = 990;
-
-    char *current;
-    while ((current = strsep(&outputs_str, ","))) {
-        Output *new = calloc(sizeof(Output), 1);
-        if (new == NULL) {
-            ELOG("Could not alloc space for fake output %s, skipping it.", current);
-            continue;
-        }
-
-        new->id = id++;
-
-        new->rect.width = atoi(strsep(&current, "x"));
-        new->rect.height = atoi(strsep(&current, "+"));
-        new->rect.x = atoi(strsep(&current, "+"));
-        new->rect.y = atoi(strsep(&current, "+"));
-
-        TAILQ_INSERT_TAIL(&outputs, new, outputs);
-        DLOG("Added fake output %d (x = %d / y = %d / w = %d / h = %d) to list of outputs.", new->id,
-            new->rect.x, new->rect.y, new->rect.width, new->rect.height);
-    }
-}
-
-/*
  * Returns the output that contains this position.
  * Returns NULL if the position is not on any output.
  */
