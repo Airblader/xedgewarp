@@ -103,7 +103,7 @@ Output *randr_get_output_containing(Position pointer) {
  *  - the second output lies (fully) in the given direction relative to the first output and
  *  - both outputs are touching (no gap in between).
  */
-static bool randr_is_next_in_direction(Output *first_output, Output *second_output, Direction direction) {
+static bool randr_neighbors_in_direction(Output *first_output, Output *second_output, Direction direction) {
     if (first_output == NULL || second_output == NULL) {
         ELOG("One of outputs %p / %p is NULL, stopping here.", first_output, second_output);
         return false;
@@ -118,9 +118,9 @@ static bool randr_is_next_in_direction(Output *first_output, Output *second_outp
         case D_LEFT:
             return second->x + second->width == first->x;
         case D_BOTTOM:
-            return randr_is_next_in_direction(second_output, first_output, D_TOP);
+            return randr_neighbors_in_direction(second_output, first_output, D_TOP);
         case D_RIGHT:
-            return randr_is_next_in_direction(second_output, first_output, D_LEFT);
+            return randr_neighbors_in_direction(second_output, first_output, D_LEFT);
         default:
             ELOG("Received unknown value %d and don't know what to do with it.", direction);
             return false;
@@ -128,15 +128,34 @@ static bool randr_is_next_in_direction(Output *first_output, Output *second_outp
 }
 
 /*
+ * Returns either first or second, depending on which one is closer to the given pointer.
+ * If either one is NULL, the other one is used.
+ */
+static Output *randr_get_output_closer_to(Position pointer, Output *first, Output *second) {
+    if (first == NULL || second == NULL)
+        return first == NULL ? second : first;
+
+    // TODO implement this.
+    return first;
+}
+
+/*
  * Returns the next output in the given direction relative to the specified
  * output. Returns NULL if no such output exists.
+ * The given pointer must lie within the given output.
  */
-Output *randr_next_output_in_direction(Output *from, Direction direction) {
+Output *randr_next_output_in_direction(Output *from, Position pointer, Direction direction) {
+    Output *best = NULL;
+
     Output *output;
     TAILQ_FOREACH(output, &outputs, outputs) {
-        if (randr_is_next_in_direction(from, output, direction))
-            return output;
+        if (!randr_neighbors_in_direction(from, output, direction))
+            continue;
+
+        /* Determine whether this output is better than the one we found
+         * already (or, if we have none yet, use it). */
+        best = randr_get_output_closer_to(pointer, best, output);
     }
 
-    return NULL;
+    return best;
 }

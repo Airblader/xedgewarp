@@ -84,7 +84,7 @@ void pointer_warp_to_adjacent_output(Position pointer, Direction direction) {
         return;
     }
 
-    Output *output = randr_next_output_in_direction(current, direction);
+    Output *output = randr_next_output_in_direction(current, pointer, direction);
     if (output == NULL) {
         TLOG("At position %d / %d, there is no more output in direction %d.",
             pointer.x, pointer.y, direction);

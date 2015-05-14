@@ -20,5 +20,6 @@ Output *randr_get_output_containing(Position pointer);
 /**
  * Returns the next output in the given direction relative to the specified
  * output. Returns NULL if no such output exists.
+ * The given pointer must lie within the given output.
  */
-Output *randr_next_output_in_direction(Output *from, Direction direction);
+Output *randr_next_output_in_direction(Output *from, Position pointer, Direction direction);
