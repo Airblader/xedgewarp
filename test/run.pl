@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use utf8;
 use v5.10;
-use IPC::System::Simple qw(system);
+use IPC::System::Simple qw(capture);
 
 my $pid;
 
@@ -38,9 +38,31 @@ sub stop_x_server {
     }
 }
 
-start_x_server();
+BEGIN {
+    start_x_server;
+}
+
+END {
+    stop_x_server;
+}
+
+my $failures = 0;
 for my $test (@tests) {
     print "\nRunning $test...\n";
-    system([0..255], "/bin/sh -c $test");
+    my @lines = capture([0..255], "/bin/sh -c $test");
+
+    for (@lines) {
+        print "$_";
+
+        next unless /^not ok/;
+        $failures++;
+    }
 }
-stop_x_server();
+
+if ($failures == 0) {
+    print "\n\nAll tests successful.\n";
+    exit 0;
+} else {
+    print "\n\nFailed tests: $failures\n";
+    exit 1;
+}
