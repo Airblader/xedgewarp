@@ -2,6 +2,13 @@
 #include "all.h"
 
 /*
+ * We set this whenever a warp has occured so that we
+ * prevent further warps until the pointer left the
+ * edge at least once.
+ */
+bool has_warped = false;
+
+/*
  * Returns a bitmask of directions in which the pointer is touching
  * the output border. This function does not check whether the
  * border segment is "dead".
@@ -41,8 +48,15 @@ Direction pointer_touches_border(Position pointer) {
     int directions = pointer_touches_any_border(pointer);
 
     /* Pointer is not on any border, so we can stop looking. */
-    if (directions == D_NONE)
+    if (directions == D_NONE) {
+        /* The pointer is not on any border segment, so we are eligible
+         * for warping the next time it touches a dead border segment
+         * again.
+         * Note that we do this here for any border as otherwise, we will
+         * incorrectly reset this after any warp. */
+        has_warped = false;
         return D_NONE;
+    }
 
     /* Otherwise, we need to check if the border segment is "dead", i.e., there is no
      * directly neighboring output as in such a case we don't need to do anything. */
@@ -88,6 +102,9 @@ void pointer_warp_to_adjacent_output(Position pointer, Direction direction) {
         return;
     }
 
+    /* Store the fact that we warped to prevent further warping for now. */
+    has_warped = true;
+
     DLOG("Successfully warped pointer from %d / %d (%d) to %d / %d (%d)",
         pointer.x, pointer.y, current->id,
         target.x, target.y, output->id);
@@ -103,7 +120,6 @@ Position pointer_transform_position(Position pointer, Output *from, Output *to, 
         .y = 0
     };
 
-    // TODO avoid jumping back and forth in an endless loop
     if (direction == D_TOP) {
         coordinates.y = to->rect.y + to->rect.height - 1;
         coordinates.x = to->rect.x;

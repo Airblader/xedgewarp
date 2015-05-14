@@ -95,6 +95,13 @@ void event_handle_motion_notify(xcb_motion_notify_event_t *event) {
     if (direction == D_NONE)
         return;
 
+    /* Check if we already warped without the pointer having left dead border
+     * segments in the meantime. If so, we ignore this. */
+    if (has_warped) {
+        DLOG("Pointer has already been warped, not warping it again.");
+        return;
+    }
+
     DLOG("Touching a dead border segment at %d / %d.", pointer.x, pointer.y);
     pointer_warp_to_adjacent_output(pointer, direction);
 }

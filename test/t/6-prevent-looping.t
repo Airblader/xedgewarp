@@ -32,11 +32,6 @@ $pointer = get_pointer;
 is($pointer->{x}, 200, 'pointer is warped to the output on the right and no further');
 is($pointer->{y}, 200, 'pointer is warped to the top of the new output');
 
-warp_pointer(201, 200);
-$pointer = get_pointer;
-is($pointer->{x}, 300, 'pointer is warped to the output above');
-is($pointer->{y}, 199, 'pointer is warped to the bottom of the new output');
-
 exit_xedgewarp;
 
 ###################################################################################################

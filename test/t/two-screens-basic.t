@@ -29,6 +29,9 @@ $pointer = get_pointer;
 is($pointer->{x}, 199, 'pointer is warped to the neighboring output (left)');
 is($pointer->{y}, 199, 'pointer is warped to the bottom of the new output');
 
+# reset pointer to become eligible for warping again
+warp_pointer(50, 50);
+
 # B: Right edge
 warp_pointer(199, 50);
 $pointer = get_pointer;
@@ -60,6 +63,9 @@ warp_pointer(250, 200);
 $pointer = get_pointer;
 is($pointer->{x}, 199, 'pointer is warped to the neighboring output (top)');
 is($pointer->{y}, 199, 'pointer is warped to the right of the new output');
+
+# reset pointer to become eligible for warping again
+warp_pointer(50, 50);
 
 # B: Bottom edge
 warp_pointer(50, 199);
