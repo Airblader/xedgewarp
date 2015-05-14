@@ -10,3 +10,4 @@
 #include "types.h"
 #include "util.h"
 #include "xedgewarp.h"
+#include "fake_outputs.h"

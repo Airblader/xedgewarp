@@ -11,8 +11,9 @@ static void parse_args(int argc, char *argv[]) {
     while ((c = getopt(argc, argv, "o:")) != -1) {
         switch (c) {
             case 'o':
-                randr_from_fake_outputs(optarg);
                 config.disable_randr = true;
+                fake_outputs_create_outputs(optarg);
+                fake_outputs_visualize();
                 break;
             default:
                 bail("Unknown command line arguments.");
