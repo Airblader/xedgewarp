@@ -5,28 +5,27 @@
  * Set up fake RandR outputs from a string.
  */
 void fake_outputs_create_outputs(char *outputs_str) {
-    /* We use some fake IDs starting at 990. We never use this ID anyway. */
-    int id = 990;
-
-    char *current;
-    while ((current = strsep(&outputs_str, ","))) {
+    uint32_t x, y, width, height;
+    const char *walk = outputs_str;
+    while (sscanf(walk, "%ux%u+%u+%u", &width, &height, &x, &y) == 4) {
         Output *new = calloc(sizeof(Output), 1); 
-        if (new == NULL) {
-            ELOG("Could not alloc space for fake output %s, skipping it.", current);
-            continue;
-        } 
+        if (new == NULL)
+            bail("Could not alloc space for fake output, bailing out.");
 
-        new->id = id++;
+        new->id = xcb_generate_id(connection);
 
-        new->rect.width = atoi(strsep(&current, "x"));
-        new->rect.height = atoi(strsep(&current, "+"));
-        new->rect.x = atoi(strsep(&current, "+"));
-        new->rect.y = atoi(strsep(&current, "+"));
+        new->rect.width = width;
+        new->rect.height = height;
+        new->rect.x = x;
+        new->rect.y = y;
 
         TAILQ_INSERT_TAIL(&outputs, new, outputs);
         DLOG("Added fake output %d (x = %d / y = %d / w = %d / h = %d) to list of outputs.", new->id,
             new->rect.x, new->rect.y, new->rect.width, new->rect.height);
-    } 
+
+        char buf[1024];
+        walk += sprintf(buf, "%ux%u+%u+%u", width, height, x, y) + 1;
+    }
 }
 
 /*
