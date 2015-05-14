@@ -110,37 +110,58 @@ void pointer_warp_to_adjacent_output(Position pointer, Direction direction) {
         target.x, target.y, output->id);
 }
 
+/*
+ * Calculate the target position of the pointer such that it is only warped as little / far as necessary.
+ * This means the pointer will be moved to the very edge of the target output.
+ */
 static Position pointer_transform_position_closest(Position pointer, Output *from, Output *to, Direction direction) {
     Position coordinates = {
         .x = 0,
         .y = 0
     };
 
-    if (direction == D_TOP) {
-        coordinates.y = to->rect.y + to->rect.height - 1;
-        coordinates.x = to->rect.x;
-        if (to->rect.x <= pointer.x)
-            coordinates.x += to->rect.width - 1;
-    } else if (direction == D_LEFT) {
-        coordinates.x = to->rect.x + to->rect.width - 1;
-        coordinates.y = to->rect.y;
-        if (to->rect.y <= pointer.y)
-            coordinates.y += to->rect.height - 1;
-    } else if (direction == D_BOTTOM) {
-        coordinates.y = to->rect.y;
-        coordinates.x = to->rect.x;
-        if (to->rect.x <= pointer.x)
-            coordinates.x += to->rect.width - 1;
-    } else if (direction == D_RIGHT) {
-        coordinates.x = to->rect.x;
-        coordinates.y = to->rect.y;
-        if (to->rect.y <= pointer.y)
-            coordinates.y += to->rect.height - 1;
+    switch (direction) {
+        case D_TOP:
+            coordinates.y = to->rect.y + to->rect.height - 1;
+            coordinates.x = to->rect.x;
+            if (to->rect.x <= pointer.x)
+                coordinates.x += to->rect.width - 1;
+
+            break;
+        case D_LEFT:
+            coordinates.x = to->rect.x + to->rect.width - 1;
+            coordinates.y = to->rect.y;
+            if (to->rect.y <= pointer.y)
+                coordinates.y += to->rect.height - 1;
+
+            break;
+        case D_BOTTOM:
+            coordinates.y = to->rect.y;
+            coordinates.x = to->rect.x;
+            if (to->rect.x <= pointer.x)
+                coordinates.x += to->rect.width - 1;
+
+            break;
+        case D_RIGHT:
+            coordinates.x = to->rect.x;
+            coordinates.y = to->rect.y;
+            if (to->rect.y <= pointer.y)
+                coordinates.y += to->rect.height - 1;
+
+            break;
+        default:
+            ELOG("Unknown direction %d.", direction);
+            break;
     }
 
     return coordinates;
 }
 
+/*
+ * Calculate the target position of the pointer based on its relative position on the source output.
+ * For example, if the pointer is warped to the right and was located 30% from the top of the source output,
+ * it will be warped to the position 30% from the top of the target output.
+ */
 static Position pointer_transform_position_relative(Position pointer, Output *from, Output *to, Direction direction) {
     /* To initially get to the correct output, we borrow the logic here and adapt afterwards. */
     Position coordinates = pointer_transform_position_closest(pointer, from, to, direction);
