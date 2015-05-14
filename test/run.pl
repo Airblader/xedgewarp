@@ -40,7 +40,7 @@ sub stop_x_server {
 
 start_x_server();
 for my $test (@tests) {
-    print "Running $test...\n";
+    print "\nRunning $test...\n";
     system([0..255], "/bin/sh -c $test");
 }
 stop_x_server();
