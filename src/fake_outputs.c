@@ -48,8 +48,8 @@ static void fake_outputs_open_window(Rect *rect, uint32_t background, uint32_t b
  * Open marker windows for the fake outputs.
  */
 void fake_outputs_visualize(void) {
-    if (!config.disable_randr) {
-        ELOG("Cannot visualize outputs when RandR is not disabled!");
+    if (config.fake_outputs == NULL) {
+        ELOG("Can only visualize fake outputs when they are set.");
         return;
     }
 

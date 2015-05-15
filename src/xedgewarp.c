@@ -12,9 +12,10 @@ Config config;
 
 int main(int argc, char *argv[]) {
     atexit(on_xedgewarp_exit);
-
-    initialize();
     parse_arguments(argc, argv);
+
+    initialize_x11();
+    initialize_xedgewarp();
 
     randr_query_outputs();
     event_initialize_tree();
@@ -27,7 +28,7 @@ int main(int argc, char *argv[]) {
 /*
  * Initialize the X server connection.
  */
-void initialize(void) {
+void initialize_x11(void) {
     DLOG("Establishing a connection to the X server...");
     int display;
     connection = xcb_connect(NULL, &display);
@@ -41,11 +42,24 @@ void initialize(void) {
 }
 
 /*
+ * Initialize xedgewarp specific things from the parsed
+ * config.
+ */
+void initialize_xedgewarp(void) {
+    if (config.fake_outputs != NULL) {
+        fake_outputs_create_outputs(config.fake_outputs);
+        fake_outputs_visualize();
+    }
+}
+
+/*
  * Called when xedgewarp terminates.
  */
 void on_xedgewarp_exit(void) {
     if (connection != NULL)
         xcb_disconnect(connection);
+
+    FREE(config.fake_outputs);
 }
 
 /*
@@ -65,9 +79,7 @@ void parse_arguments(int argc, char *argv[]) {
 
                 break;
             case 'o':
-                config.disable_randr = true;
-                fake_outputs_create_outputs(optarg);
-                fake_outputs_visualize();
+                config.fake_outputs = strdup(optarg);
                 break;
             case 'v':
                 fprintf(stderr, "%s version %s\n", argv[0], __VERSION);

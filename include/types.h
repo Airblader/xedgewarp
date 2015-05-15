@@ -43,8 +43,8 @@ typedef enum warp_mode_t {
 } warp_mode_t;
 
 typedef struct Config {
-    /* Disables RandR, which is useful for testing purposes. */
-    bool disable_randr;
+    /* If set, we use fake outputs and disable RandR (for testing purposes). */
+    char *fake_outputs;
 
     /* Defines how the pointer should be warped. */
     warp_mode_t warp_mode;

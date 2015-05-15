@@ -48,8 +48,8 @@ static void randr_handle_output(xcb_randr_output_t id, xcb_randr_get_output_info
  */
 // TODO Make this work for updating the list, not just initializing it.
 void randr_query_outputs(void) {
-    if (config.disable_randr) {
-        DLOG("Skipping querying RandR outputs as RandR is disabled.");
+    if (config.fake_outputs != NULL) {
+        DLOG("Skipping querying RandR outputs because fake outputs are being used.");
         return;
     }
 
