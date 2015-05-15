@@ -24,7 +24,7 @@ $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
 
 $(ODIR)/%.o: $(SDIR)/%.c $(INCS)
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) -D'__VERSION="$(shell git describe --all --long --always)"' $(CFLAGS) -o $@ -c $<
 
 .PHONY: install
 install: all

@@ -2,13 +2,17 @@
 #include "all.h"
 #include <getopt.h>
 
+#ifndef __VERSION
+#define __VERSION "unknown"
+#endif
+
 xcb_connection_t *connection;
 xcb_window_t root;
 Config config;
 
 static void parse_args(int argc, char *argv[]) {
     int c;
-    while ((c = getopt(argc, argv, "m:o:h")) != -1) {
+    while ((c = getopt(argc, argv, "m:o:vh")) != -1) {
         switch (c) {
             case 'm':
                 if (strcasecmp(optarg, "closest") == 0)
@@ -23,6 +27,10 @@ static void parse_args(int argc, char *argv[]) {
                 config.disable_randr = true;
                 fake_outputs_create_outputs(optarg);
                 fake_outputs_visualize();
+                break;
+            case 'v':
+                fprintf(stderr, "%s version %s\n", argv[0], __VERSION);
+                exit(EXIT_SUCCESS);
                 break;
             case 'h':
             default:
