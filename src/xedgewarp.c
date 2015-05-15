@@ -87,9 +87,10 @@ void parse_arguments(int argc, char *argv[]) {
                 break;
             case 'h':
             default:
-                fprintf(stderr, "Usage: %s [-m closest|relative]", argv[0]);
+                fprintf(stderr, "Usage: %s [-m closest|relative] [-v] [-h]", argv[0]);
                 fprintf(stderr, "\n");
-                fprintf(stderr, "\t-h display the help / usage\n");
+                fprintf(stderr, "\t-h display the usage and exit\n");
+                fprintf(stderr, "\t-v display the version and exit\n");
                 fprintf(stderr, "\t-m closest|relative\n"
                                 "\t\tSpecifies how the mouse pointer should be warped.\n");
                 fprintf(stderr, "\n");
