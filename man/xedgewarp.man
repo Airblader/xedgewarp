@@ -1,0 +1,54 @@
+xedgewarp(1)
+============
+Ingo Bürk <ingo.buerk@airblader.de>
+
+== NAME
+
+xedgewarp - window manager agnostic pointer warping between outputs
+
+== SYNOPSIS
+
+xedgewarp [-m closest|relative] [-h] [-v]
+
+== OPTIONS
+
+-m closest|relative::
+Specifies how the mouse pointer should be warped. With "closest", the pointer
+is warped only as little as necessary to the closest edge on the output. With
+"relative", the relative position (e.g., "75% from the top") on the current
+output is calculated and then used on the target output.
+
+-h::
+Display the usage and exit.
+
+-v::
+Display the version and exit.
+
+== DESCRIPTION
+
+When using multiple outputs, this tool will automatically warp the mouse
+pointer in case outputs aren't perfectly aligned and the same size. While some
+desktop environments may provide this functionality, xedgewarp can offer
+it to those running no desktop environment or one that does not offer this
+functionality.
+
+Consider, for example, the output layout below. If you moved your mouse pointer
+from left to right to the position marked with ">", it would simply hit a wall
+and not move any further.
+
+With xedgewarp, the pointer will be automatically warped to either position "1"
+("closest" mode) or "2" ("relative" mode).
+
+----
++-----+
+|     |
+|    >|
+|     |
+|     +1------+
+|     |       |
++-----+2      |
+      |       |
+      |       |
+      |       |
+      +-------+
+----
