@@ -3,6 +3,9 @@ SDIR = src
 IDIR = include
 ODIR = obj
 
+INSTALL = install
+PREFIX = /usr/bin
+
 CC = gcc
 CFLAGS += -I$(IDIR)
 CFLAGS += -std=gnu99
@@ -22,6 +25,14 @@ $(TARGET): $(OBJS)
 
 $(ODIR)/%.o: $(SDIR)/%.c $(INCS)
 	$(CC) $(CFLAGS) -o $@ -c $<
+
+.PHONY: install
+install: all
+	$(INSTALL) -m 0755 $(TARGET) $(DESTDIR)$(PREFIX)/
+
+.PHONY: uninstall
+uninstall:
+	$(RM) $(DESTDIR)$(PREFIX)/$(TARGET)
 
 .PHONY: test
 test: all
