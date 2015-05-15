@@ -47,7 +47,7 @@ $(MANS): %.1: %.man
 	a2x -f manpage $<
 
 .PHONY: test
-test: all
+test: clean $(TARGET)
 	@cd test/; \
 	perl run.pl; \
 	cd ../
