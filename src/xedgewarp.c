@@ -8,7 +8,7 @@ Config config;
 
 static void parse_args(int argc, char *argv[]) {
     int c;
-    while ((c = getopt(argc, argv, "m:o:")) != -1) {
+    while ((c = getopt(argc, argv, "m:o:h")) != -1) {
         switch (c) {
             case 'm':
                 if (strcasecmp(optarg, "closest") == 0)
@@ -24,8 +24,16 @@ static void parse_args(int argc, char *argv[]) {
                 fake_outputs_create_outputs(optarg);
                 fake_outputs_visualize();
                 break;
+            case 'h':
             default:
-                bail("Unknown command line arguments.");
+                fprintf(stderr, "Usage: %s [-m closest|relative]", argv[0]);
+                fprintf(stderr, "\n");
+                fprintf(stderr, "\t-h display the help / usage\n");
+                fprintf(stderr, "\t-m closest|relative\n"
+                                "\t\tSpecifies how the mouse pointer should be warped.\n");
+                fprintf(stderr, "\n");
+                exit(EXIT_FAILURE);
+                break;
         }
     }
 }
