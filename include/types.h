@@ -5,10 +5,10 @@
 #include <xcb/xcb.h>
 #include <xcb/randr.h>
 
-typedef struct Position {
+typedef struct position_t {
     uint32_t x;
     uint32_t y;
-} Position;
+} position_t;
 
 typedef struct Rect {
     uint32_t x;

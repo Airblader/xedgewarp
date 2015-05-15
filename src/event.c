@@ -86,7 +86,7 @@ void event_handle_create_notify(xcb_create_notify_event_t *event) {
  * output.
  */
 void event_handle_motion_notify(xcb_motion_notify_event_t *event) {
-    Position pointer = {
+    position_t pointer = {
         .x = event->root_x,
         .y = event->root_y
     };

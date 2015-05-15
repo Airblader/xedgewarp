@@ -8,15 +8,15 @@
  * A border segment is considered dead when it is not directly neighboring
  * another output.
  */
-Direction pointer_touches_border(Position pointer);
+Direction pointer_touches_border(position_t pointer);
 
 /**
  * Warps the pointer to the output in the given direction.
  */
-void pointer_warp_to_adjacent_output(Position pointer, Direction direction);
+void pointer_warp_to_adjacent_output(position_t pointer, Direction direction);
 
 /**
  * Takes the given position and transforms it to the position it should
  * have when warped from one output to the other.
  */
-Position pointer_transform_position(Position pointer, Output *from, Output *to, Direction direction);
+position_t pointer_transform_position(position_t pointer, Output *from, Output *to, Direction direction);
