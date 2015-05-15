@@ -13,7 +13,7 @@ bool has_warped = false;
  * the output border. This function does not check whether the
  * border segment is "dead".
  */
-static Direction pointer_touches_any_border(position_t pointer) {
+static direction_t pointer_touches_any_border(position_t pointer) {
     Output *output = randr_get_output_containing(pointer);
     if (output == NULL)
         return D_NONE;
@@ -42,7 +42,7 @@ static Direction pointer_touches_any_border(position_t pointer) {
  * A border segment is considered dead when it is not directly neighboring
  * another output.
  */
-Direction pointer_touches_border(position_t pointer) {
+direction_t pointer_touches_border(position_t pointer) {
     /* First, we check if the pointer is touching any border of the output it is on,
      * whether or not there is a neighboring output. */
     int directions = pointer_touches_any_border(pointer);
@@ -61,7 +61,7 @@ Direction pointer_touches_border(position_t pointer) {
     /* Otherwise, we need to check if the border segment is "dead", i.e., there is no
      * directly neighboring output as in such a case we don't need to do anything. */
     position_t fake_position = pointer;
-    Direction direction;
+    direction_t direction;
     if (directions & D_LEFT || directions & D_RIGHT) {
         direction = directions & D_LEFT ? D_LEFT : D_RIGHT;
         fake_position.x += direction == D_LEFT ? -1 : 1;
@@ -77,7 +77,7 @@ Direction pointer_touches_border(position_t pointer) {
 /*
  * Warps the pointer to the output in the given direction.
  */
-void pointer_warp_to_adjacent_output(position_t pointer, Direction direction) {
+void pointer_warp_to_adjacent_output(position_t pointer, direction_t direction) {
     Output *current = randr_get_output_containing(pointer);
     if (current == NULL) {
         ELOG("Cannot determine current output.");
@@ -114,7 +114,7 @@ void pointer_warp_to_adjacent_output(position_t pointer, Direction direction) {
  * Calculate the target position of the pointer such that it is only warped as little / far as necessary.
  * This means the pointer will be moved to the very edge of the target output.
  */
-static position_t pointer_transform_position_closest(position_t pointer, Output *from, Output *to, Direction direction) {
+static position_t pointer_transform_position_closest(position_t pointer, Output *from, Output *to, direction_t direction) {
     position_t coordinates = {
         .x = 0,
         .y = 0
@@ -162,7 +162,7 @@ static position_t pointer_transform_position_closest(position_t pointer, Output 
  * For example, if the pointer is warped to the right and was located 30% from the top of the source output,
  * it will be warped to the position 30% from the top of the target output.
  */
-static position_t pointer_transform_position_relative(position_t pointer, Output *from, Output *to, Direction direction) {
+static position_t pointer_transform_position_relative(position_t pointer, Output *from, Output *to, direction_t direction) {
     /* To initially get to the correct output, we borrow the logic here and adapt afterwards. */
     position_t coordinates = pointer_transform_position_closest(pointer, from, to, direction);
 
@@ -190,7 +190,7 @@ static position_t pointer_transform_position_relative(position_t pointer, Output
  * Takes the given position and transforms it to the position it should
  * have when warped from one output to the other.
  */
-position_t pointer_transform_position(position_t pointer, Output *from, Output *to, Direction direction) {
+position_t pointer_transform_position(position_t pointer, Output *from, Output *to, direction_t direction) {
     switch (config.warp_mode) {
         case WM_CLOSEST:
             return pointer_transform_position_closest(pointer, from, to, direction);

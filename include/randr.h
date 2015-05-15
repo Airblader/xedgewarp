@@ -22,4 +22,4 @@ Output *randr_get_output_containing(position_t pointer);
  * output. Returns NULL if no such output exists.
  * The given pointer must lie within the given output.
  */
-Output *randr_next_output_in_direction(Output *from, position_t pointer, Direction direction);
+Output *randr_next_output_in_direction(Output *from, position_t pointer, direction_t direction);

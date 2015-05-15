@@ -103,7 +103,7 @@ Output *randr_get_output_containing(position_t pointer) {
  *  - the second output lies (fully) in the given direction relative to the first output and
  *  - both outputs are touching (no gap in between).
  */
-static bool randr_neighbors_in_direction(Output *first_output, Output *second_output, Direction direction) {
+static bool randr_neighbors_in_direction(Output *first_output, Output *second_output, direction_t direction) {
     if (first_output == NULL || second_output == NULL) {
         ELOG("One of outputs %p / %p is NULL, stopping here.", first_output, second_output);
         return false;
@@ -131,7 +131,7 @@ static bool randr_neighbors_in_direction(Output *first_output, Output *second_ou
  * Returns either first or second, depending on which one is closer to the given pointer.
  * If either one is NULL, the other one is used.
  */
-static Output *randr_get_output_closer_to(position_t pointer, Direction direction,
+static Output *randr_get_output_closer_to(position_t pointer, direction_t direction,
         Output *first, Output *second) {
     if (first == NULL || second == NULL)
         return first == NULL ? second : first;
@@ -179,7 +179,7 @@ static Output *randr_get_output_closer_to(position_t pointer, Direction directio
  * output. Returns NULL if no such output exists.
  * The given pointer must lie within the given output.
  */
-Output *randr_next_output_in_direction(Output *from, position_t pointer, Direction direction) {
+Output *randr_next_output_in_direction(Output *from, position_t pointer, direction_t direction) {
     Output *best = NULL;
 
     Output *output;

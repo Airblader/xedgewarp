@@ -91,7 +91,7 @@ void event_handle_motion_notify(xcb_motion_notify_event_t *event) {
         .y = event->root_y
     };
 
-    Direction direction = pointer_touches_border(pointer);
+    direction_t direction = pointer_touches_border(pointer);
     if (direction == D_NONE)
         return;
 
