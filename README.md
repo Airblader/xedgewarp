@@ -23,12 +23,21 @@ Having learned a lot by contributing to [i3/i3](https://github.com/i3/i3), this 
 
 ## Installation
 
-xedgewarp is currently in development and it is not recommended to be used. If you care to install it anyway, clone the repository and simply run
+### Arch / Manjaro (AUR)
 
-    make all
+xedgewarp is available in the AUR as `xedgewarp-git`.
 
-There is currently no installation per se, i.e., no binary will be installed into the path. The compiled binary will simply be available in the root folder of the repository as `xedgewarp`.
+### Manual
+
+xedgewarp is make-based. Hence, you can clone the git repository and compile and install it via
+
+````
+git clone https://github.com/Airblader/xedgewarp
+cd xedgewarp
+make
+sudo make install
+```
 
 ## Usage
 
-TODO.
+See `man xedgewarp` after installation.
