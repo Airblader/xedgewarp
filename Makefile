@@ -32,8 +32,8 @@ $(ODIR)/%.o: $(SDIR)/%.c $(INCS)
 
 .PHONY: install
 install: all
-	$(INSTALL) -m 0755 $(TARGET) $(DESTDIR)$(PREFIX)/
-	$(INSTALL) -m 0644 man/xedgewarp.1 $(DESTDIR)$(MANDIR)/xedgewarp.1
+	$(INSTALL) -Dm 0755 $(TARGET) $(DESTDIR)$(PREFIX)/
+	$(INSTALL) -Dm 0644 man/xedgewarp.1 $(DESTDIR)$(MANDIR)/xedgewarp.1
 
 .PHONY: uninstall
 uninstall:
