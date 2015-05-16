@@ -25,7 +25,7 @@ Having learned a lot by contributing to [i3/i3](https://github.com/i3/i3), this 
 
 ### Arch / Manjaro (AUR)
 
-xedgewarp is available in the AUR as `xedgewarp-git`.
+xedgewarp is available in the AUR as [xedgewarp-git](https://aur.archlinux.org/packages/xedgewarp-git/).
 
 ### Manual
 
