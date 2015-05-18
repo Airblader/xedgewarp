@@ -19,6 +19,8 @@ void event_register_window(xcb_window_t window) {
         DLOG("Window does not exist anymore, cannot set event mask on it.");
     else
         ELOG("Received error %d when trying to register event mask.", error->error_code);
+
+    FREE(error);
 }
 
 static void event_initialize_tree_on(xcb_window_t window) {
