@@ -68,8 +68,11 @@ direction_t pointer_touches_border(position_t pointer) {
     } else if (directions & D_TOP || directions & D_BOTTOM) {
         direction = directions & D_TOP ? D_TOP : D_BOTTOM;
         fake_position.y += direction == D_TOP ? -1 : 1;
-    } else
+    } else {
         bail("Congratulations, you found a bug. Please report it!");
+        /* Never reached */
+        return D_NONE;
+    }
 
     return randr_get_output_containing(fake_position) == NULL ? direction : D_NONE;
 }
