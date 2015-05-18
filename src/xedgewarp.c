@@ -67,7 +67,7 @@ void on_xedgewarp_exit(void) {
  */
 void parse_arguments(int argc, char *argv[]) {
     int c;
-    while ((c = getopt(argc, argv, "m:o:vh")) != -1) {
+    while ((c = getopt(argc, argv, "m:l:o:vh")) != -1) {
         switch (c) {
             case 'm':
                 if (strcasecmp(optarg, "closest") == 0)
@@ -78,6 +78,16 @@ void parse_arguments(int argc, char *argv[]) {
                     bail("Unknown warp mode, bailing out.");
 
                 break;
+            case 'l':
+                if (strcasecmp(optarg, "error") == 0)
+                    config.log_level = L_ERROR;
+                else if (strcasecmp(optarg, "debug") == 0)
+                    config.log_level = L_DEBUG;
+                else if (strcasecmp(optarg, "trace") == 0)
+                    config.log_level = L_TRACE;
+                else
+                    bail("Unknown log level, bailing out.");
+                break;
             case 'o':
                 config.fake_outputs = strdup(optarg);
                 break;
@@ -87,12 +97,14 @@ void parse_arguments(int argc, char *argv[]) {
                 break;
             case 'h':
             default:
-                fprintf(stderr, "Usage: %s [-m closest|relative] [-v] [-h]", argv[0]);
+                fprintf(stderr, "Usage: %s [-m closest|relative] [-l error|debug|trace] [-v] [-h]", argv[0]);
                 fprintf(stderr, "\n");
                 fprintf(stderr, "\t-h display the usage and exit\n");
                 fprintf(stderr, "\t-v display the version and exit\n");
                 fprintf(stderr, "\t-m closest|relative\n"
                                 "\t\tSpecifies how the mouse pointer should be warped.\n");
+                fprintf(stderr, "\t-l error|debug|trace\n"
+                                "\t\tSpecify the log level.\n");
                 fprintf(stderr, "\n");
                 exit(EXIT_FAILURE);
                 break;

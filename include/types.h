@@ -42,10 +42,19 @@ typedef enum warp_mode_t {
     WM_RELATIVE = 1
 } warp_mode_t;
 
+typedef enum log_level_t {
+    L_ERROR = 0,
+    L_DEBUG = 1,
+    L_TRACE = 2
+} log_level_t;
+
 typedef struct Config {
     /* If set, we use fake outputs and disable RandR (for testing purposes). */
     char *fake_outputs;
 
     /* Defines how the pointer should be warped. */
     warp_mode_t warp_mode;
+
+    /* How much spam should we generate? */
+    log_level_t log_level;
 } Config;

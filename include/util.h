@@ -16,22 +16,22 @@
 #define ABS(x) ((x) < 0) ? -(x) : (x)
 #define MIN(a, b) ((a) < (b)) ? (a) : (b)
 
-#if 0
-#define TLOG(message, ...)        \
-    DLOG(message, ##__VA_ARGS__);
-#else
-#define TLOG(message, ...) \
-    do {} while (0)
-#endif
+#define TLOG(message, ...)                                                             \
+    do {                                                                               \
+        if (config.log_level >= L_TRACE)                                               \
+            printf("[%s:%d] TRACE: " message "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
+    } while(0)
 
-#define DLOG(message, ...)                                                         \
-    do {                                                                           \
-        printf("[%s:%d] DEBUG: " message "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
+#define DLOG(message, ...)                                                             \
+    do {                                                                               \
+        if (config.log_level >= L_DEBUG)                                               \
+            printf("[%s:%d] DEBUG: " message "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
     } while (0)
 
-#define ELOG(message, ...)                                                                  \
-    do {                                                                                    \
-        fprintf(stderr, "[%s:%d] ERROR: " message "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
+#define ELOG(message, ...)                                                                      \
+    do {                                                                                        \
+        if (config.log_level >= L_ERROR)                                                        \
+            fprintf(stderr, "[%s:%d] ERROR: " message "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
     } while (0)
 
 /**

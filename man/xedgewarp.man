@@ -8,7 +8,7 @@ xedgewarp - window manager agnostic pointer warping between outputs
 
 == SYNOPSIS
 
-xedgewarp [-m closest|relative] [-h] [-v]
+xedgewarp [-m closest|relative] [-l error|debug|trace] [-h] [-v]
 
 == OPTIONS
 
@@ -17,6 +17,9 @@ Specifies how the mouse pointer should be warped. With "closest", the pointer
 is warped only as little as necessary to the closest edge on the output. With
 "relative", the relative position (e.g., "75% from the top") on the current
 output is calculated and then used on the target output.
+
+-l error|debug|trace::
+Specify the log level.
 
 -h::
 Display the usage and exit.
