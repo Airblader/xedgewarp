@@ -20,6 +20,8 @@ OBJS = $(patsubst %,$(ODIR)/%,$(notdir $(SRCS:.c=.o)))
 
 MANS = man/xedgewarp.1
 
+.NOTPARALLEL:
+
 .PHONY: all
 all: clean $(TARGET) mans
 
