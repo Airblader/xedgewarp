@@ -69,7 +69,8 @@ void event_enter_loop(void) {
         int type = event->response_type & ~0x80;
 
         if (type == randr_ext_offset + XCB_RANDR_SCREEN_CHANGE_NOTIFY) {
-            // TODO Handle this event
+            randr_query_outputs();
+            // TODO close visualizers, reopen them, ...
             continue;
         }
 
