@@ -66,9 +66,20 @@ void on_xedgewarp_exit(void) {
  * Parse command-line arguments.
  */
 void parse_arguments(int argc, char *argv[]) {
-    int c;
-    while ((c = getopt(argc, argv, "m:l:o:vh")) != -1) {
+    int c, pid;
+    while ((c = getopt(argc, argv, "bm:l:o:vh")) != -1) {
         switch (c) {
+            case 'b':
+                pid = fork();
+                if (pid == -1)
+                    bail("Could not fork to the background, bailing out.");
+                else if (pid == 0)
+                    DLOG("Forked from the parent process.");
+                else {
+                    DLOG("Process has been forked into the background, exiting now.");
+                    exit(EXIT_SUCCESS);
+                }
+                break;
             case 'm':
                 if (strcasecmp(optarg, "closest") == 0)
                     config.warp_mode = WM_CLOSEST;
