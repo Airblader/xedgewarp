@@ -10,7 +10,15 @@ void event_register_window(xcb_window_t window) {
 
     xcb_void_cookie_t cookie = xcb_change_window_attributes_checked(connection,
         window, XCB_CW_EVENT_MASK, (uint32_t[]) { mask }); 
-    xcb_request_check_or_bail(cookie, "Could not register for events on window, bailing out.");
+    xcb_generic_error_t *error = xcb_request_check(connection, cookie);
+    if (error == NULL)
+        return;
+
+    /* The window might not exist anymore by now. In this case, we can safely ignore the error. */
+    if (error->error_code == XCB_WINDOW)
+        DLOG("Window does not exist anymore, cannot set event mask on it.");
+    else
+        ELOG("Received error %d when trying to register event mask.", error->error_code);
 }
 
 static void event_initialize_tree_on(xcb_window_t window) {

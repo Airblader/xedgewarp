@@ -43,8 +43,3 @@ void bail(char *message);
  * Checks the cookie for errors and returns the result.
  */
 bool xcb_return_request_check(xcb_void_cookie_t cookie);
-
-/**
- * Checks the cookie for errors and bails out if one was returned.
- */
-void xcb_request_check_or_bail(xcb_void_cookie_t cookie, char *message);
