@@ -17,6 +17,7 @@ int main(int argc, char *argv[]) {
     initialize_x11();
     initialize_xedgewarp();
 
+    randr_init();
     randr_query_outputs();
     event_initialize_tree();
 
