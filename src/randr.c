@@ -12,7 +12,7 @@ static void randr_handle_output(xcb_randr_output_t id, xcb_randr_get_output_info
         xcb_timestamp_t time) {
     DLOG("Handling output %d", id);
     if (output->crtc == XCB_NONE || output->connection == XCB_RANDR_CONNECTION_DISCONNECTED) {
-        ELOG("Output %d seems to be disabled / disconnected, skipping it.", id);
+        DLOG("Output %d seems to be disabled / disconnected, skipping it.", id);
         return;
     }
 
