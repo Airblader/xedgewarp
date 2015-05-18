@@ -70,7 +70,6 @@ void event_enter_loop(void) {
 
         if (type == randr_ext_offset + XCB_RANDR_SCREEN_CHANGE_NOTIFY) {
             randr_query_outputs();
-            // TODO close visualizers, reopen them, ...
             continue;
         }
 
