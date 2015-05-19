@@ -4,6 +4,8 @@ compiler:
 install:
     - sudo apt-get update
     - sudo apt-get install asciidoc
+      # These are needed to avoid some ugly warnings even though they don't affect us
+    - sudo apt-get install xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x-ttcidfont-conf
     - sudo apt-get install --no-install-recommends libxcb-util0-dev libxcb-randr0-dev libxcb-icccm4-dev libxcb-xinerama0-dev
     - sudo apt-get install --no-install-recommends libanyevent-perl libanyevent-i3-perl libextutils-pkgconfig-perl xcb-proto cpanminus xvfb xserver-xephyr xauth libinline-perl libxml-simple-perl libmouse-perl libmousex-nativetraits-perl libextutils-depends-perl perl-modules libtest-deep-perl libtest-exception-perl libxml-parser-perl libtest-simple-perl libtest-fatal-perl libdata-dump-perl libtest-differences-perl libxml-tokeparser-perl libtest-use-ok-perl libipc-run-perl
     - sudo /bin/sh -c 'cpanm -n -v X11::XCB || true'
