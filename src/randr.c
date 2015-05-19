@@ -85,7 +85,7 @@ void randr_query_outputs(void) {
 
     DLOG("Querying RandR outputs...");
     xcb_randr_get_screen_resources_current_reply_t *reply = xcb_randr_get_screen_resources_current_reply(
-        connection, xcb_randr_get_screen_resources_current(connection, root), NULL );
+        connection, xcb_randr_get_screen_resources_current(connection, root), NULL);
     if (reply == NULL)
         bail("Could not receive RandR outputs, bailing out.");
 
@@ -167,7 +167,7 @@ static Output *randr_get_output_closer_to(position_t pointer, direction_t direct
         return first == NULL ? second : first;
 
     int32_t d_first = 0,
-             d_second = 0;
+            d_second = 0;
     switch (direction) {
         case D_TOP:
         case D_BOTTOM:
