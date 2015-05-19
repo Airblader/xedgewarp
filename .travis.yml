@@ -8,9 +8,6 @@ install:
     - sudo /bin/sh -c 'cpanm -n -v X11::XCB || true'
     - sudo /bin/sh -c 'cpanm -n -v IPC::System::Simple || true'
 script:
-    # this will cause run.pl to start a Xephyr instance on :1
-    - "export XEWDISPLAY=:1"
-    # start Xvfb on :99 and execute tests
     - "export DISPLAY=:99"
     - "cd test && xvfb-run -n 99 ./run.pl"
     - "cd .."
