@@ -31,7 +31,7 @@ void randr_init(void) {
  *
  */
 static void randr_handle_output(xcb_randr_output_t id, xcb_randr_get_output_info_reply_t *output,
-        xcb_timestamp_t time) {
+        xcb_timestamp_t timestamp) {
     DLOG("Handling output %d", id);
     if (output->crtc == XCB_NONE || output->connection == XCB_RANDR_CONNECTION_DISCONNECTED) {
         DLOG("Output %d seems to be disabled / disconnected, skipping it.", id);
@@ -39,7 +39,7 @@ static void randr_handle_output(xcb_randr_output_t id, xcb_randr_get_output_info
     }
 
     xcb_randr_get_crtc_info_reply_t *crtc = xcb_randr_get_crtc_info_reply(connection,
-        xcb_randr_get_crtc_info(connection, output->crtc, time), NULL);
+        xcb_randr_get_crtc_info(connection, output->crtc, timestamp), NULL);
     if (crtc == NULL) {
         ELOG("Could not receive CRTC information for output %d, skipping it.", id);
         return;
@@ -90,19 +90,19 @@ void randr_query_outputs(void) {
         bail("Could not receive RandR outputs, bailing out.");
 
     /* This allows us to ensure that we get consistent information from the server. */
-    xcb_timestamp_t time = reply->config_timestamp;
+    xcb_timestamp_t timestamp = reply->config_timestamp;
 
     int len = xcb_randr_get_screen_resources_current_outputs_length(reply);
     xcb_randr_output_t *randr_outputs = xcb_randr_get_screen_resources_current_outputs(reply);
     for (int i = 0; i < len; i++) {
         xcb_randr_get_output_info_reply_t *output = xcb_randr_get_output_info_reply(
-            connection, xcb_randr_get_output_info(connection, randr_outputs[i], time), NULL);
+            connection, xcb_randr_get_output_info(connection, randr_outputs[i], timestamp), NULL);
         if (output == NULL) {
             DLOG("No output found for id = %d, skipping it.", randr_outputs[i]);
             continue;
         }
 
-        randr_handle_output(randr_outputs[i], output, time);
+        randr_handle_output(randr_outputs[i], output, timestamp);
         FREE(output);
     }
 
