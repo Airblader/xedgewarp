@@ -12,6 +12,8 @@ my $pid;
 my @tests = @ARGV;
 @tests = <t/*.t> if @tests == 0;
 
+$ENV{XEWDISPLAY} //= ":99";
+
 sub wait_for_x {
     my $display = substr $ENV{XEWDISPLAY}, 1;
     while (1) {
@@ -20,12 +22,11 @@ sub wait_for_x {
 }
 
 sub start_x_server {
-    $ENV{XEWDISPLAY} //= ":99";
     return if $ENV{XEWDISPLAY} eq $ENV{DISPLAY};
 
     $pid = fork;
     if ($pid == 0) {
-        exec "Xephyr", $ENV{XEWDISPLAY}, "-screen", "800x600", "-nolisten", "tcp";
+        exec "Xephyr", $ENV{XEWDISPLAY}, "-screen", "800x600", "-nolisten", "tcp", "+extension", "XINERAMA";
         exit 1;
     }
 
@@ -35,21 +36,26 @@ sub start_x_server {
 sub stop_x_server {
     if (defined $pid) {
         kill(15, $pid);
+        waitpid($pid, 0);
     }
 }
 
 BEGIN {
-    start_x_server;
+#    start_x_server;
 }
 
 END {
-    stop_x_server;
+#    stop_x_server;
 }
 
 my $failures = 0;
 for my $test (@tests) {
+    start_x_server;
+
     print "\nRunning $test...\n";
     my @lines = capture(EXIT_ANY, "/bin/sh -c $test");
+
+    stop_x_server;
 
     if ($EXITVAL != 0) {
         $failures++;
