@@ -1,8 +1,30 @@
 // vim:ts=4:sw=4:expandtab
 #include "all.h"
 
+/* The offset of the RandR extension. */
+int randr_ext_offset = -1;
+
 /* List of RandR outputs. */
 struct outputs_head outputs = TAILQ_HEAD_INITIALIZER(outputs);
+
+/*
+ * Query the presence of the RandR extension and
+ * subscribe to events.
+ */
+void randr_init(void) {
+    const xcb_query_extension_reply_t *reply = xcb_get_extension_data(connection, &xcb_randr_id);
+    if (!reply->present)
+        bail("Your X server does not support the RandR extension, bailing out.");
+
+    randr_ext_offset = reply->first_event;
+
+    xcb_randr_select_input(connection, root,
+        XCB_RANDR_NOTIFY_MASK_SCREEN_CHANGE |
+        XCB_RANDR_NOTIFY_MASK_OUTPUT_CHANGE |
+        XCB_RANDR_NOTIFY_MASK_CRTC_CHANGE |
+        XCB_RANDR_NOTIFY_MASK_OUTPUT_PROPERTY);
+    xcb_flush(connection);
+}
 
 /*
  * Called by randr_query_outputs to insert / update a particular output in our list.
@@ -46,11 +68,19 @@ static void randr_handle_output(xcb_randr_output_t id, xcb_randr_get_output_info
  * Query RandR outputs.
  *
  */
-// TODO Make this work for updating the list, not just initializing it.
 void randr_query_outputs(void) {
     if (config.fake_outputs != NULL) {
         DLOG("Skipping querying RandR outputs because fake outputs are being used.");
         return;
+    }
+
+    /* First, we make sure the list is empty since this might be called multiple
+     * times when resolutions change and the like. */
+    Output *current = TAILQ_FIRST(&outputs);
+    while (!TAILQ_EMPTY(&outputs)) {
+        TAILQ_REMOVE(&outputs, current, outputs);
+        FREE(current);
+        current = TAILQ_FIRST(&outputs);
     }
 
     DLOG("Querying RandR outputs...");

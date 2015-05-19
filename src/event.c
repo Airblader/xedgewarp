@@ -66,7 +66,14 @@ void event_enter_loop(void) {
 
     xcb_generic_event_t *event;
     while ((event = xcb_wait_for_event(connection))) {
-        switch (event->response_type & ~0x80) {
+        int type = event->response_type & ~0x80;
+
+        if (type == randr_ext_offset + XCB_RANDR_SCREEN_CHANGE_NOTIFY) {
+            randr_query_outputs();
+            continue;
+        }
+
+        switch (type) {
             case XCB_CREATE_NOTIFY:
                 event_handle_create_notify((xcb_create_notify_event_t *) event);
                 break;
