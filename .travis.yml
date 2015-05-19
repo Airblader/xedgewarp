@@ -8,5 +8,7 @@ install:
     - sudo /bin/sh -c 'cpanm -n -v X11::XCB || true'
     - sudo /bin/sh -c 'cpanm -n -v IPC::System::Simple || true'
 script:
+    - "make all"
+    - "sudo make install"
     - "cd test && xvfb-run ./run.pl"
     - "cd .."

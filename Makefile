@@ -33,7 +33,7 @@ $(ODIR)/%.o: $(SDIR)/%.c $(INCS)
 	$(CC) -D'__VERSION="$(shell git describe --all --long --always)"' $(CFLAGS) -o $@ -c $<
 
 .PHONY: install
-install: all
+install: $(TARGET)
 	$(INSTALL) -Dm 0755 $(TARGET) $(DESTDIR)$(PREFIX)/$(TARGET)
 	$(INSTALL) -Dm 0644 man/xedgewarp.1 $(DESTDIR)$(MANDIR)/xedgewarp.1
 
