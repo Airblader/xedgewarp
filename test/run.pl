@@ -12,7 +12,7 @@ my $pid;
 my @tests = @ARGV;
 @tests = <t/*.t> if @tests == 0;
 
-$ENV{XEWDISPLAY} //= ":99";
+$ENV{XEWDISPLAY} //= ":1";
 
 sub wait_for_x {
     my $display = substr $ENV{XEWDISPLAY}, 1;
@@ -38,14 +38,6 @@ sub stop_x_server {
         kill(15, $pid);
         waitpid($pid, 0);
     }
-}
-
-BEGIN {
-#    start_x_server;
-}
-
-END {
-#    stop_x_server;
 }
 
 my $failures = 0;
