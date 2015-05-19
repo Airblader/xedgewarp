@@ -20,7 +20,7 @@
     do {                                                                               \
         if (config.log_level >= L_TRACE)                                               \
             printf("[%s:%d] TRACE: " message "\n", __FILE__, __LINE__, ##__VA_ARGS__); \
-    } while(0)
+    } while (0)
 
 #define DLOG(message, ...)                                                             \
     do {                                                                               \
