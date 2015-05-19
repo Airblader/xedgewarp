@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use utf8;
 use v5.10;
-use IPC::System::Simple qw(capture);
+use IPC::System::Simple qw(capture $EXITVAL EXIT_ANY);
 
 my $pid;
 
@@ -49,7 +49,12 @@ END {
 my $failures = 0;
 for my $test (@tests) {
     print "\nRunning $test...\n";
-    my @lines = capture([0..255], "/bin/sh -c $test");
+    my @lines = capture(EXIT_ANY, "/bin/sh -c $test");
+
+    if ($EXITVAL != 0) {
+        $failures++;
+        next;
+    }
 
     for (@lines) {
         print "$_";
