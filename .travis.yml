@@ -8,6 +8,5 @@ install:
     - sudo /bin/sh -c 'cpanm -n -v X11::XCB || true'
     - sudo /bin/sh -c 'cpanm -n -v IPC::System::Simple || true'
 script:
-    - "export DISPLAY=:99"
-    - "cd test && xvfb-run -n 99 ./run.pl"
+    - "cd test && xvfb-run ./run.pl"
     - "cd .."
