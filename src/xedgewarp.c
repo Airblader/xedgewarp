@@ -1,19 +1,41 @@
 // vim:ts=4:sw=4:expandtab
 #include "all.h"
 #include <getopt.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #ifndef __VERSION
 #define __VERSION "unknown"
 #endif
 
+typedef void (*callback)(void);
+
+/* Forward declarations */
+static void run();
+static void safe_fork(callback child_callback);
+
 xcb_connection_t *connection;
 xcb_window_t root;
-Config config;
+Config config = {
+    .fake_outputs = NULL,
+    .warp_mode = WM_CLOSEST,
+    .log_level = L_ERROR,
+    .fork_mode = false
+};
 
 int main(int argc, char *argv[]) {
     atexit(on_xedgewarp_exit);
     parse_arguments(argc, argv);
 
+    if (config.fork_mode) {
+        safe_fork(run);
+    } else {
+        run();
+    }
+}
+
+static void run() {
     initialize_x11();
     initialize_xedgewarp();
 
@@ -68,7 +90,7 @@ void on_xedgewarp_exit(void) {
  */
 void parse_arguments(int argc, char *argv[]) {
     int c;
-    while ((c = getopt(argc, argv, "m:l:o:vh")) != -1) {
+    while ((c = getopt(argc, argv, "m:l:o:bvh")) != -1) {
         switch (c) {
             case 'm':
                 if (strcasecmp(optarg, "closest") == 0)
@@ -92,16 +114,20 @@ void parse_arguments(int argc, char *argv[]) {
             case 'o':
                 config.fake_outputs = strdup(optarg);
                 break;
+            case 'b':
+                config.fork_mode = true;
+                break;
             case 'v':
                 fprintf(stderr, "%s version %s\n", argv[0], __VERSION);
                 exit(EXIT_SUCCESS);
                 break;
             case 'h':
             default:
-                fprintf(stderr, "Usage: %s [-m closest|relative] [-l error|debug|trace] [-v] [-h]", argv[0]);
+                fprintf(stderr, "Usage: %s [-b] [-m closest|relative] [-l error|debug|trace] [-v] [-h]", argv[0]);
                 fprintf(stderr, "\n");
                 fprintf(stderr, "\t-h display the usage and exit\n");
                 fprintf(stderr, "\t-v display the version and exit\n");
+                fprintf(stderr, "\t-b run in background mode, i.e. fork on startup\n");
                 fprintf(stderr, "\t-m closest|relative\n"
                                 "\t\tSpecifies how the mouse pointer should be warped.\n");
                 fprintf(stderr, "\t-l error|debug|trace\n"
@@ -110,5 +136,23 @@ void parse_arguments(int argc, char *argv[]) {
                 exit(EXIT_FAILURE);
                 break;
         }
+    }
+}
+
+/* Double fork to prevent zombie processes */
+static void safe_fork(callback child_callback) {
+    pid_t pid = fork();
+    if (!pid) {
+        if (!fork()) {
+            /* this is the child that keeps going */
+            (*child_callback)();
+        } else {
+            /* the first child process exits */
+            exit(EXIT_SUCCESS);
+        }
+    } else {
+        /* this is the original process */
+        /* wait for the first child to exit which it will immediately */
+        waitpid(pid, NULL, 0);
     }
 }
