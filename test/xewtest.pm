@@ -38,7 +38,7 @@ sub run_xedgewarp {
 
         open STDERR, '>&STDOUT';
         # we use stdbuf (coreutils) to disable buffering
-        exec 'stdbuf', '-o', '0', '-e', '0', 'xedgewarp', '-l', 'trace', '-m', $args{mode}, '-o', join(',', @{$args{outputs}});
+        exec 'stdbuf', '-o', '0', '-e', '0', '../xedgewarp', '-l', 'trace', '-m', $args{mode}, '-o', join(',', @{$args{outputs}});
         exit 1;
     }
 
