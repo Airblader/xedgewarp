@@ -57,4 +57,7 @@ typedef struct Config {
 
     /* How much spam should we generate? */
     log_level_t log_level;
+
+    /* If true, fork on startup */
+    bool fork_mode;
 } Config;

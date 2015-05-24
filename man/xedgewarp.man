@@ -8,9 +8,12 @@ xedgewarp - window manager agnostic pointer warping between outputs
 
 == SYNOPSIS
 
-xedgewarp [-m closest|relative] [-l error|debug|trace] [-h] [-v]
+xedgewarp [-b] [-m closest|relative] [-l error|debug|trace] [-h] [-v]
 
 == OPTIONS
+
+-b::
+Run in background mode, i.e. fork on startup.
 
 -m closest|relative::
 Specifies how the mouse pointer should be warped. With "closest", the pointer
