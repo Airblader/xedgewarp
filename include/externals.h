@@ -11,4 +11,5 @@
 
 #include <xcb/xcb.h>
 #include <xcb/randr.h>
+#include <xcb/xinput.h>
 #include <xcb/xcb_aux.h>
