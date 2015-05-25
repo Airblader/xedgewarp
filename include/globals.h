@@ -14,6 +14,9 @@ extern xcb_window_t root;
 /** The offset of the RandR extension. */
 extern int randr_ext_offset;
 
+/** The offset of the XInput extension. */
+extern int xinput_ext_offset;
+
 /** The list of RandR outputs. */
 extern struct outputs_head outputs;
 

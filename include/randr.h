@@ -6,12 +6,6 @@
 #include "types.h"
 
 /**
- * Query the presence of the RandR extension and
- * subscribe to events.
- */
-void randr_init(void);
-
-/**
  * Query RandR outputs.
  *
  */
