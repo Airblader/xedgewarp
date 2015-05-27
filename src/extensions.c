@@ -35,9 +35,18 @@ static void extensions_init_randr(void) {
 }
 
 static void extensions_init_xinput(void) {
-    const xcb_query_extension_reply_t *reply = xcb_get_extension_data(connection, &xcb_input_id);
-    if (!reply->present)
-        bail("Your X server does not support the XInput extension, bailing out.");
+    /* First we check if XInput is available at all. */
+    int event, error;
+    if (!XQueryExtension(display, "XInputExtension", &xinput_ext_opcode, &event, &error))
+        bail("XInput extension is not available.");
 
-    xinput_ext_opcode = reply->major_opcode;
+    /* Now we check if we have the correct version. We need >= 2.2. */
+    int major_opcode = 2;
+    int minor_opcode = 2;
+
+    int result = XIQueryVersion(display, &major_opcode, &minor_opcode);
+    if (result == BadRequest)
+        bail("XI2 is not supported or not in a sufficient version.");
+    else if (result != Success)
+        bail("Failed to query XI extension. This is a bug.");
 }

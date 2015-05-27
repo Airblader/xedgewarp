@@ -1,6 +1,5 @@
 // vim:ts=4:sw=4:expandtab
 #include "all.h"
-#include <X11/extensions/XInput2.h>
 
 /* Forward declarations */
 static void event_register_window_substructure_notify(xcb_window_t window);
@@ -104,7 +103,7 @@ void event_enter_loop(void) {
         xcb_ge_generic_event_t *generic_event = (xcb_ge_generic_event_t *) event;
         if (generic_event->response_type == XCB_GE_GENERIC &&
                 generic_event->extension == xinput_ext_opcode &&
-                generic_event->event_type == XCB_INPUT_RAW_MOTION) {
+                generic_event->event_type == XI_RawMotion) {
 
             event_handle_motion();
             FREE(event);

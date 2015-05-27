@@ -4,13 +4,15 @@ compiler:
 before_install:
     - "echo 'deb http://archive.ubuntu.com/ubuntu/ trusty main universe' | sudo tee /etc/apt/sources.list.d/trusty.list"
     - "echo 'APT::Default-Release \"precise\";' | sudo tee /etc/apt/apt.conf.d/default-release"
-    - "echo 'deb http://archive.ubuntu.com/ubuntu/ utopic main universe' | sudo tee /etc/apt/sources.list.d/utopic.list"
+#    - "echo 'deb http://archive.ubuntu.com/ubuntu/ utopic main universe' | sudo tee /etc/apt/sources.list.d/utopic.list"
 install:
     - sudo apt-get update
-    - sudo apt-get install asciidoc
       # These are needed to avoid some ugly warnings even though they don't affect us
     - sudo apt-get install xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x-ttcidfont-conf
-    - sudo apt-get install -t utopic --no-install-recommends libxcb-util0-dev libxcb-randr0-dev libxcb-icccm4-dev libxcb-xinerama0-dev libxcb1-dev libx11-dev libxi-dev libx11-xcb-dev 
+      # Now we start with what we need to compile the project
+    - sudo apt-get install asciidoc
+    - sudo apt-get install -t trusty --no-install-recommends libxcb-util0-dev libxcb-randr0-dev libxcb-icccm4-dev libxcb-xinerama0-dev libxcb1-dev libx11-dev libxi-dev libx11-xcb-dev
+      # These we need to run the tests
     - sudo apt-get install --no-install-recommends libanyevent-perl libanyevent-i3-perl libextutils-pkgconfig-perl xcb-proto cpanminus xvfb xserver-xephyr xauth libinline-perl libxml-simple-perl libmouse-perl libmousex-nativetraits-perl libextutils-depends-perl perl-modules libtest-deep-perl libtest-exception-perl libxml-parser-perl libtest-simple-perl libtest-fatal-perl libdata-dump-perl libtest-differences-perl libxml-tokeparser-perl libtest-use-ok-perl libipc-run-perl
     - sudo /bin/sh -c 'cpanm -n -v X11::XCB || true'
     - sudo /bin/sh -c 'cpanm -n -v IPC::System::Simple || true'
