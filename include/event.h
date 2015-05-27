@@ -26,8 +26,8 @@ void event_enter_loop(void);
 void event_handle_create_notify(xcb_create_notify_event_t *event);
 
 /**
- * Handle XCB_MOTION_NOTIFY.
- * This is used to detect when the mouse reaches the edge of an
- * output.
+ * This is called when we receive a RawMotion event.
+ * It will query the pointer position and figure out whether
+ * we need to warp the cursor etc.
  */
-void event_handle_motion_notify(xcb_motion_notify_event_t *event);
+void event_handle_motion(void);

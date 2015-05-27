@@ -5,6 +5,9 @@
 #include <xcb/xcb.h>
 #include "types.h"
 
+/** The Xlib display object. */
+extern Display *display;
+
 /** Our gate to the other side. */
 extern xcb_connection_t *connection;
 
@@ -14,8 +17,8 @@ extern xcb_window_t root;
 /** The offset of the RandR extension. */
 extern int randr_ext_offset;
 
-/** The offset of the XInput extension. */
-extern int xinput_ext_offset;
+/* The major opcode of the XInput2 extension. */
+extern int xinput_ext_opcode;
 
 /** The list of RandR outputs. */
 extern struct outputs_head outputs;

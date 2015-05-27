@@ -9,7 +9,7 @@
 #include <err.h>
 #include <sys/queue.h>
 
-#include <xcb/xcb.h>
+#include <X11/Xlib-xcb.h>
 #include <xcb/randr.h>
 #include <xcb/xinput.h>
 #include <xcb/xcb_aux.h>

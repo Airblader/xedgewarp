@@ -4,8 +4,8 @@
 /* The offset of the RandR extension. */
 int randr_ext_offset = -1;
 
-/* The offset of the XInput extension. */
-int xinput_ext_offset = -1;
+/* The major opcode of the Xinput2 extension. */
+int xinput_ext_opcode = -1;
 
 /* Forward declarations */
 static void extensions_init_randr(void);
@@ -39,5 +39,5 @@ static void extensions_init_xinput(void) {
     if (!reply->present)
         bail("Your X server does not support the XInput extension, bailing out.");
 
-    xinput_ext_offset = reply->first_event;
+    xinput_ext_opcode = reply->major_opcode;
 }

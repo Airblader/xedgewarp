@@ -1,12 +1,22 @@
 // vim:ts=4:sw=4:expandtab
 #include "all.h"
+#include <X11/extensions/XInput2.h>
+
+/* Forward declarations */
+static void event_register_window_substructure_notify(xcb_window_t window);
+static void event_register_window_motion(xcb_window_t window);
 
 /*
  * Register for events we need on the given window.
  */
 void event_register_window(xcb_window_t window) {
+    event_register_window_substructure_notify(window);
+    event_register_window_motion(window);
+}
+
+static void event_register_window_substructure_notify(xcb_window_t window) {
     DLOG("Setting event mask for window %d", window);
-    const uint32_t mask = XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_POINTER_MOTION;
+    const uint32_t mask = XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
 
     xcb_void_cookie_t cookie = xcb_change_window_attributes_checked(connection,
         window, XCB_CW_EVENT_MASK, (uint32_t[]) { mask }); 
@@ -21,6 +31,22 @@ void event_register_window(xcb_window_t window) {
         ELOG("Received error %d when trying to register event mask.", error->error_code);
 
     FREE(error);
+}
+
+/* TODO port this to XCB once xcb-xinput is stable. */
+static void event_register_window_motion(xcb_window_t window) {
+    XIEventMask masks[1];
+    unsigned char mask[(XI_LASTEVENT + 7)/8];
+
+    memset(mask, 0, sizeof(mask));
+    XISetMask(mask, XI_RawMotion);
+
+    masks[0].deviceid = XIAllMasterDevices;
+    masks[0].mask_len = sizeof(mask);
+    masks[0].mask = mask;
+
+    XISelectEvents(display, window, masks, 1);
+    XFlush(display);
 }
 
 static void event_initialize_tree_on(xcb_window_t window) {
@@ -66,8 +92,22 @@ void event_enter_loop(void) {
 
     xcb_generic_event_t *event;
     while ((event = xcb_wait_for_event(connection))) {
+        /* First, we see if this is a RawMotion event. Since Xinput2 uses
+         * generic events, we need to cast the event and check its details
+         * rather than using the extension offset. */
+        xcb_ge_generic_event_t *generic_event = (xcb_ge_generic_event_t *) event;
+        if (generic_event->response_type == XCB_GE_GENERIC &&
+                generic_event->extension == xinput_ext_opcode &&
+                generic_event->event_type == XCB_INPUT_RAW_MOTION) {
+
+            event_handle_motion();
+            continue;
+        }
+
+        /* From here on out we look at the event type itself. */
         int type = event->response_type & ~0x80;
 
+        /* Check if this is a RandR event. */
         if (type == randr_ext_offset + XCB_RANDR_SCREEN_CHANGE_NOTIFY) {
             randr_query_outputs();
             continue;
@@ -76,9 +116,6 @@ void event_enter_loop(void) {
         switch (type) {
             case XCB_CREATE_NOTIFY:
                 event_handle_create_notify((xcb_create_notify_event_t *) event);
-                break;
-            case XCB_MOTION_NOTIFY:
-                event_handle_motion_notify((xcb_motion_notify_event_t *) event);
                 break;
             default:
                 break;
@@ -98,15 +135,24 @@ void event_handle_create_notify(xcb_create_notify_event_t *event) {
 }
 
 /*
- * Handle XCB_MOTION_NOTIFY.
- * This is used to detect when the mouse reaches the edge of an
- * output.
+ * This is called when we receive a RawMotion event.
+ * It will query the pointer position and figure out whether
+ * we need to warp the cursor etc.
  */
-void event_handle_motion_notify(xcb_motion_notify_event_t *event) {
-    position_t pointer = {
-        .x = event->root_x,
-        .y = event->root_y
+void event_handle_motion(void) {
+    xcb_query_pointer_reply_t *reply = xcb_query_pointer_reply(connection,
+            xcb_query_pointer(connection, root), NULL);
+    if (reply == NULL) {
+        ELOG("Failed to query the cursor position, ignoring this event.");
+        return;
+    }
+
+    position_t pointer = (position_t) {
+        .x = reply->root_x,
+        .y = reply->root_y
     };
+
+    FREE(reply);
 
     direction_t direction = pointer_touches_border(pointer);
     if (direction == D_NONE)

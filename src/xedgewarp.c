@@ -15,8 +15,10 @@ typedef void (*callback)(void);
 static void run();
 static void safe_fork(callback child_callback);
 
+Display *display;
 xcb_connection_t *connection;
 xcb_window_t root;
+
 Config config = {
     .fake_outputs = NULL,
     .warp_mode = WM_CLOSEST,
@@ -53,13 +55,15 @@ static void run() {
  */
 void initialize_x11(void) {
     DLOG("Establishing a connection to the X server...");
-    int display;
-    connection = xcb_connect(NULL, &display);
-    if (xcb_connection_has_error(connection)) {
+    display = XOpenDisplay(NULL);
+    if (display == NULL) {
         bail("Could not connect to X server, bailing out.");
     }
 
-    xcb_screen_t *screen = xcb_aux_get_screen(connection, display);
+    connection = XGetXCBConnection(display);
+    XSetEventQueueOwner(display, XCBOwnsEventQueue);
+
+    xcb_screen_t *screen = xcb_aux_get_screen(connection, DefaultScreen(display));
     root = screen->root;
     DLOG("X server connection established. Let's rock!");
 }
