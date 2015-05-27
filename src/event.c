@@ -16,7 +16,9 @@ void event_register_window(xcb_window_t window) {
 
 static void event_register_window_substructure_notify(xcb_window_t window) {
     DLOG("Setting event mask for window %d", window);
-    const uint32_t mask = XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
+    uint32_t mask = XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
+    if (config.fake_outputs != NULL)
+        mask |= XCB_EVENT_MASK_POINTER_MOTION;
 
     xcb_void_cookie_t cookie = xcb_change_window_attributes_checked(connection,
         window, XCB_CW_EVENT_MASK, (uint32_t[]) { mask }); 
@@ -35,6 +37,10 @@ static void event_register_window_substructure_notify(xcb_window_t window) {
 
 /* TODO port this to XCB once xcb-xinput is stable. */
 static void event_register_window_motion(xcb_window_t window) {
+    /* For tests we rely on the normal pointer motion events. */
+    if (config.fake_outputs != NULL)
+        return;
+
     XIEventMask masks[1];
     unsigned char mask[(XI_LASTEVENT + 7)/8];
 
@@ -101,6 +107,7 @@ void event_enter_loop(void) {
                 generic_event->event_type == XCB_INPUT_RAW_MOTION) {
 
             event_handle_motion();
+            FREE(event);
             continue;
         }
 
@@ -110,12 +117,16 @@ void event_enter_loop(void) {
         /* Check if this is a RandR event. */
         if (type == randr_ext_offset + XCB_RANDR_SCREEN_CHANGE_NOTIFY) {
             randr_query_outputs();
+            FREE(event);
             continue;
         }
 
         switch (type) {
             case XCB_CREATE_NOTIFY:
                 event_handle_create_notify((xcb_create_notify_event_t *) event);
+                break;
+            case XCB_MOTION_NOTIFY:
+                event_handle_motion();
                 break;
             default:
                 break;
