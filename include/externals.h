@@ -9,6 +9,6 @@
 #include <err.h>
 #include <sys/queue.h>
 
-#include <xcb/xcb.h>
-#include <xcb/randr.h>
-#include <xcb/xcb_aux.h>
+#include <X11/Xlib.h>
+#include <X11/extensions/Xrandr.h>
+#include <X11/extensions/Xinput2.h>
