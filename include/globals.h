@@ -5,14 +5,8 @@
 #include <xcb/xcb.h>
 #include "types.h"
 
-/** Our gate to the other side. */
-extern xcb_connection_t *connection;
-
-/** The root window of this display. */
-extern xcb_window_t root;
-
-/** The offset of the RandR extension. */
-extern int randr_ext_offset;
+/** The Xlib connection. */
+extern Display *display;
 
 /** The list of RandR outputs. */
 extern struct outputs_head outputs;

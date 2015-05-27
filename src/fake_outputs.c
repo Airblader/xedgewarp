@@ -12,12 +12,15 @@ void fake_outputs_create_outputs(char *outputs_str) {
         if (new == NULL)
             bail("Could not alloc space for fake output, bailing out.");
 
-        new->id = xcb_generate_id(connection);
-
         new->rect.width = width;
         new->rect.height = height;
         new->rect.x = x;
         new->rect.y = y;
+
+        new->id = XCreateWindow(display, root, rect->x + 1, rect->y + 1, rect->width - 2, rect->height - 2,
+            1, CopyFromParent, InputOutput, CopyFromParent,
+            CWBackPixel | CWBorderPixel | CWOverrideRedirect,
+
 
         TAILQ_INSERT_TAIL(&outputs, new, outputs);
         DLOG("Added fake output %d (x = %d / y = %d / w = %d / h = %d) to list of outputs.", new->id,
