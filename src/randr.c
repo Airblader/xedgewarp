@@ -202,3 +202,50 @@ Output *randr_next_output_in_direction(Output *from, position_t pointer, directi
 
     return best;
 }
+
+/*
+ * Returns the next output in the given direction assuming the outputs
+ * to form a torus shape, i.e., it will actually look on the far opposite side
+ * of the given direction.
+ */
+Output *randr_cycle_output_in_direction(Output *from, position_t pointer, direction_t direction) {
+    Output *best = NULL;
+
+    Output *output;
+    TAILQ_FOREACH(output, &outputs, outputs) {
+        if (output == from)
+            continue;
+
+        switch (direction) {
+            case D_TOP:
+            case D_BOTTOM:
+                if (output->rect.x + output->rect.width <= pointer.x || output->rect.x > pointer.x)
+                    continue;
+
+                if (best == NULL ||
+                    (direction == D_TOP && output->rect.y + output->rect.height > best->rect.y + best->rect.height) ||
+                    (direction == D_BOTTOM && output->rect.y < best->rect.y)) {
+
+                    best = output;
+                }
+                break;
+            case D_LEFT:
+            case D_RIGHT:
+                if (output->rect.y + output->rect.height <= pointer.y || output->rect.y > pointer.y)
+                    continue;
+
+                if (best == NULL ||
+                    (direction == D_LEFT && output->rect.x + output->rect.width > best->rect.x + best->rect.width) ||
+                    (direction == D_RIGHT && output->rect.x < best->rect.x)) {
+
+                    best = output;
+                }
+                break;
+            default:
+                ELOG("Unknown direction %d.", direction);
+                return NULL;
+        }
+    }
+
+    return best;
+}

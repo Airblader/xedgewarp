@@ -20,3 +20,9 @@ void pointer_warp_to_adjacent_output(position_t pointer, direction_t direction);
  * have when warped from one output to the other.
  */
 position_t pointer_transform_position(position_t pointer, Output *from, Output *to, direction_t direction);
+
+/**
+ * Map the pointer to the correct position if it has to be cycled to the far other
+ * end of all outputs.
+ */
+position_t pointer_transform_cycled_position(position_t pointer, Output *to, direction_t direction);
