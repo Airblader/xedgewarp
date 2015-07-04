@@ -84,6 +84,13 @@ void randr_query_outputs(void) {
         FREE(output);
     }
 
+    DLOG("Dumping outputs:");
+    Output *output;
+    TAILQ_FOREACH(output, &outputs, outputs) {
+        DLOG("Output %d: %d / %d / %d / %d.", output->id, output->rect.x, output->rect.y,
+            output->rect.width, output->rect.height);
+    }
+
     FREE(reply);
 }
 
