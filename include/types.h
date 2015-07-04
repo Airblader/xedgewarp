@@ -42,6 +42,12 @@ typedef enum warp_mode_t {
     WM_RELATIVE = 1
 } warp_mode_t;
 
+typedef enum cycle_mode_t {
+    CM_NONE = 0,
+    CM_VERTICAL = 1 << 0,
+    CM_HORIZONTAL = 1 << 1
+} cycle_mode_t;
+
 typedef enum log_level_t {
     L_ERROR = 0,
     L_DEBUG = 1,
@@ -56,7 +62,7 @@ typedef struct Config {
     warp_mode_t warp_mode;
 
     /* Cycle on the far outputs (as if the outputs form a torus shape). */
-    bool cycle;
+    cycle_mode_t cycle_mode;
 
     /* How much spam should we generate? */
     log_level_t log_level;

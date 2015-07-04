@@ -223,9 +223,8 @@ Output *randr_cycle_output_in_direction(Output *from, position_t pointer, direct
                     continue;
 
                 if (best == NULL ||
-                    (direction == D_TOP && output->rect.y + output->rect.height > best->rect.y + best->rect.height) ||
-                    (direction == D_BOTTOM && output->rect.y < best->rect.y)) {
-
+                        (direction == D_TOP && output->rect.y + output->rect.height > best->rect.y + best->rect.height) ||
+                        (direction == D_BOTTOM && output->rect.y < best->rect.y)) {
                     best = output;
                 }
                 break;
@@ -235,9 +234,8 @@ Output *randr_cycle_output_in_direction(Output *from, position_t pointer, direct
                     continue;
 
                 if (best == NULL ||
-                    (direction == D_LEFT && output->rect.x + output->rect.width > best->rect.x + best->rect.width) ||
-                    (direction == D_RIGHT && output->rect.x < best->rect.x)) {
-
+                        (direction == D_LEFT && output->rect.x + output->rect.width > best->rect.x + best->rect.width) ||
+                        (direction == D_RIGHT && output->rect.x < best->rect.x)) {
                     best = output;
                 }
                 break;

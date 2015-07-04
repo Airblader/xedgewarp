@@ -22,7 +22,7 @@ xcb_window_t root;
 Config config = {
     .fake_outputs = NULL,
     .warp_mode = WM_CLOSEST,
-    .cycle = false,
+    .cycle_mode = CM_NONE,
     .log_level = L_ERROR,
     .fork_mode = false
 };
@@ -95,7 +95,7 @@ void on_xedgewarp_exit(void) {
  */
 void parse_arguments(int argc, char *argv[]) {
     int c;
-    while ((c = getopt(argc, argv, "m:cl:o:bvh")) != -1) {
+    while ((c = getopt(argc, argv, "m:c:l:o:bvh")) != -1) {
         switch (c) {
             case 'm':
                 if (strcasecmp(optarg, "closest") == 0)
@@ -107,7 +107,17 @@ void parse_arguments(int argc, char *argv[]) {
 
                 break;
             case 'c':
-                config.cycle = true;
+                if (strcasecmp(optarg, "none") == 0)
+                    config.cycle_mode = CM_NONE;
+                else if (strcasecmp(optarg, "vertical") == 0)
+                    config.cycle_mode = CM_VERTICAL;
+                else if (strcasecmp(optarg, "horizontal") == 0)
+                    config.cycle_mode = CM_HORIZONTAL;
+                else if (strcasecmp(optarg, "both") == 0 || strcasecmp(optarg, "all") == 0)
+                    config.cycle_mode = CM_VERTICAL | CM_HORIZONTAL;
+                else
+                    bail("Unknown cycle mode, bailing out.");
+
                 break;
             case 'l':
                 if (strcasecmp(optarg, "error") == 0)
@@ -138,7 +148,7 @@ void parse_arguments(int argc, char *argv[]) {
                 fprintf(stderr, "\t-b run in background mode, i.e. fork on startup\n");
                 fprintf(stderr, "\t-m closest|relative\n"
                                 "\t\tSpecifies how the mouse pointer should be warped.\n");
-                fprintf(stderr, "\t-c\n"
+                fprintf(stderr, "\t-c none|vertical|horizontal|both\n"
                                 "\t\tConnect the far edges of all outputs as if they were to form a torus shape.\n");
                 fprintf(stderr, "\t-l error|debug|trace\n"
                                 "\t\tSpecify the log level.\n");

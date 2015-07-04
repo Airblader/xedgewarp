@@ -21,7 +21,7 @@ my $pointer;
 #     | 5 |
 #     +---+
 #
-run_xedgewarp(cycle => 1, outputs => [
+run_xedgewarp(cycle => 'both', outputs => [
     '200x200+200+200',
     '200x200+0+200',
     '200x200+400+200',
