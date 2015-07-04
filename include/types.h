@@ -55,6 +55,9 @@ typedef struct Config {
     /* Defines how the pointer should be warped. */
     warp_mode_t warp_mode;
 
+    /* Cycle on the far outputs (as if the outputs form a torus shape). */
+    bool cycle;
+
     /* How much spam should we generate? */
     log_level_t log_level;
 

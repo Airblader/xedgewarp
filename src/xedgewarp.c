@@ -22,6 +22,7 @@ xcb_window_t root;
 Config config = {
     .fake_outputs = NULL,
     .warp_mode = WM_CLOSEST,
+    .cycle = false,
     .log_level = L_ERROR,
     .fork_mode = false
 };
@@ -94,7 +95,7 @@ void on_xedgewarp_exit(void) {
  */
 void parse_arguments(int argc, char *argv[]) {
     int c;
-    while ((c = getopt(argc, argv, "m:l:o:bvh")) != -1) {
+    while ((c = getopt(argc, argv, "m:cl:o:bvh")) != -1) {
         switch (c) {
             case 'm':
                 if (strcasecmp(optarg, "closest") == 0)
@@ -104,6 +105,9 @@ void parse_arguments(int argc, char *argv[]) {
                 else
                     bail("Unknown warp mode, bailing out.");
 
+                break;
+            case 'c':
+                config.cycle = true;
                 break;
             case 'l':
                 if (strcasecmp(optarg, "error") == 0)
@@ -134,6 +138,8 @@ void parse_arguments(int argc, char *argv[]) {
                 fprintf(stderr, "\t-b run in background mode, i.e. fork on startup\n");
                 fprintf(stderr, "\t-m closest|relative\n"
                                 "\t\tSpecifies how the mouse pointer should be warped.\n");
+                fprintf(stderr, "\t-c\n"
+                                "\t\tConnect the far edges of all outputs as if they were to form a torus shape.\n");
                 fprintf(stderr, "\t-l error|debug|trace\n"
                                 "\t\tSpecify the log level.\n");
                 fprintf(stderr, "\n");
