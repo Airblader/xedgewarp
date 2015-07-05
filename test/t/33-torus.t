@@ -86,8 +86,26 @@ foreach my $torus_mode (('none', 'vertical', 'horizontal', 'both')) {
 }
 
 ###################################################################################################
+# Test torus mode on a single screen
+###################################################################################################
 
-# TODO Test more abstruse scenarios
+run_xedgewarp(torus => 'both', outputs => ['200x200+0+0']);
+
+warp_pointer(100, 100);
+
+warp_pointer(0, 100);
+$pointer = get_pointer;
+is($pointer->{x}, 199, 'torus mode works on single screen');
+is($pointer->{y}, 100, 'non-warp direction does not mutate');
+
+warp_pointer(100, 100);
+
+warp_pointer(100, 0);
+$pointer = get_pointer;
+is($pointer->{x}, 100, 'non-warp direction does not mutate');
+is($pointer->{y}, 199, 'torus mode works on single screen');
+
+exit_xedgewarp;
 
 ###################################################################################################
 
