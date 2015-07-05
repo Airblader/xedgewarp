@@ -215,14 +215,11 @@ Output *randr_next_output_in_direction(Output *from, position_t pointer, directi
  * to form a torus shape, i.e., it will actually look on the far opposite side
  * of the given direction.
  */
-Output *randr_cycle_output_in_direction(Output *from, position_t pointer, direction_t direction) {
+Output *randr_cycle_output_in_direction(position_t pointer, direction_t direction) {
     Output *best = NULL;
 
     Output *output;
     TAILQ_FOREACH(output, &outputs, outputs) {
-        if (output == from)
-            continue;
-
         switch (direction) {
             case D_TOP:
             case D_BOTTOM:

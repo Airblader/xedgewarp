@@ -28,7 +28,7 @@ sub run_xedgewarp {
     my %args = @_;
     $args{outputs} //= [ '400x200+0+0', '400x200+400+0' ];
     $args{mode} //= 'closest';
-    $args{cycle} //= 'none';
+    $args{torus} //= 'none';
 
     # warp the pointer so we have a deterministic start scenario
     $x->root->warp_pointer(0, 0);
@@ -39,7 +39,7 @@ sub run_xedgewarp {
 
         open STDERR, '>&STDOUT';
         # we use stdbuf (coreutils) to disable buffering
-        exec 'stdbuf', '-o', '0', '-e', '0', '../xedgewarp', '-l', 'trace', '-m', $args{mode}, '-c', $args{cycle}, '-o', join(',', @{$args{outputs}});
+        exec 'stdbuf', '-o', '0', '-e', '0', '../xedgewarp', '-l', 'trace', '-m', $args{mode}, '-t', $args{torus}, '-o', join(',', @{$args{outputs}});
         exit 1;
     }
 

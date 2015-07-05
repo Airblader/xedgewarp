@@ -92,13 +92,13 @@ void pointer_warp_to_adjacent_output(position_t pointer, direction_t direction) 
     if (output == NULL) {
         TLOG("At position %d / %d, there is no more output in direction %d.",
             pointer.x, pointer.y, direction);
-        if (config.cycle_mode == CM_NONE ||
-                ((direction == D_LEFT || direction == D_RIGHT) && !(config.cycle_mode & CM_HORIZONTAL)) ||
-                ((direction == D_TOP || direction == D_BOTTOM) && !(config.cycle_mode & CM_VERTICAL))) {
+        if (config.torus_mode == TM_NONE ||
+                ((direction == D_LEFT || direction == D_RIGHT) && !(config.torus_mode & TM_HORIZONTAL)) ||
+                ((direction == D_TOP || direction == D_BOTTOM) && !(config.torus_mode & TM_VERTICAL))) {
             return;
         }
 
-        output = randr_cycle_output_in_direction(current, pointer, direction);
+        output = randr_cycle_output_in_direction(pointer, direction);
         if (output == NULL) {
             TLOG("At position %d / %d, we cannot cycle to the output in direction %d.",
                 pointer.x, pointer.y, direction);

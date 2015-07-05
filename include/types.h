@@ -42,11 +42,11 @@ typedef enum warp_mode_t {
     WM_RELATIVE = 1
 } warp_mode_t;
 
-typedef enum cycle_mode_t {
-    CM_NONE = 0,
-    CM_VERTICAL = 1 << 0,
-    CM_HORIZONTAL = 1 << 1
-} cycle_mode_t;
+typedef enum torus_mode_t {
+    TM_NONE = 0,
+    TM_VERTICAL = 1 << 0,
+    TM_HORIZONTAL = 1 << 1
+} torus_mode_t;
 
 typedef enum log_level_t {
     L_ERROR = 0,
@@ -61,8 +61,8 @@ typedef struct Config {
     /* Defines how the pointer should be warped. */
     warp_mode_t warp_mode;
 
-    /* Cycle on the far outputs (as if the outputs form a torus shape). */
-    cycle_mode_t cycle_mode;
+    /* Connect the far edges of all outputs to form a torus shape. */
+    torus_mode_t torus_mode;
 
     /* How much spam should we generate? */
     log_level_t log_level;

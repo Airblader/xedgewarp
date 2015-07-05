@@ -21,7 +21,7 @@ is warped only as little as necessary to the closest edge on the output. With
 "relative", the relative position (e.g., "75% from the top") on the current
 output is calculated and then used on the target output.
 
--c none|vertical|horizontal|both::
+-t none|vertical|horizontal|both::
 Connect the far edges of all outputs as if they were to form a torus shape.
 This means, for example, that moving the cursor to the far left edge, instead
 of staying there, it will be warped to the far right edge of the far right

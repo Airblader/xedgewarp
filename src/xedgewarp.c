@@ -22,7 +22,7 @@ xcb_window_t root;
 Config config = {
     .fake_outputs = NULL,
     .warp_mode = WM_CLOSEST,
-    .cycle_mode = CM_NONE,
+    .torus_mode = TM_NONE,
     .log_level = L_ERROR,
     .fork_mode = false
 };
@@ -95,7 +95,7 @@ void on_xedgewarp_exit(void) {
  */
 void parse_arguments(int argc, char *argv[]) {
     int c;
-    while ((c = getopt(argc, argv, "m:c:l:o:bvh")) != -1) {
+    while ((c = getopt(argc, argv, "m:t:l:o:bvh")) != -1) {
         switch (c) {
             case 'm':
                 if (strcasecmp(optarg, "closest") == 0)
@@ -106,17 +106,17 @@ void parse_arguments(int argc, char *argv[]) {
                     bail("Unknown warp mode, bailing out.");
 
                 break;
-            case 'c':
+            case 't':
                 if (strcasecmp(optarg, "none") == 0)
-                    config.cycle_mode = CM_NONE;
+                    config.torus_mode = TM_NONE;
                 else if (strcasecmp(optarg, "vertical") == 0)
-                    config.cycle_mode = CM_VERTICAL;
+                    config.torus_mode = TM_VERTICAL;
                 else if (strcasecmp(optarg, "horizontal") == 0)
-                    config.cycle_mode = CM_HORIZONTAL;
+                    config.torus_mode = TM_HORIZONTAL;
                 else if (strcasecmp(optarg, "both") == 0 || strcasecmp(optarg, "all") == 0)
-                    config.cycle_mode = CM_VERTICAL | CM_HORIZONTAL;
+                    config.torus_mode = TM_VERTICAL | TM_HORIZONTAL;
                 else
-                    bail("Unknown cycle mode, bailing out.");
+                    bail("Unknown torus mode, bailing out.");
 
                 break;
             case 'l':
@@ -148,7 +148,7 @@ void parse_arguments(int argc, char *argv[]) {
                 fprintf(stderr, "\t-b run in background mode, i.e. fork on startup\n");
                 fprintf(stderr, "\t-m closest|relative\n"
                                 "\t\tSpecifies how the mouse pointer should be warped.\n");
-                fprintf(stderr, "\t-c none|vertical|horizontal|both\n"
+                fprintf(stderr, "\t-t none|vertical|horizontal|both\n"
                                 "\t\tConnect the far edges of all outputs as if they were to form a torus shape.\n");
                 fprintf(stderr, "\t-l error|debug|trace\n"
                                 "\t\tSpecify the log level.\n");
