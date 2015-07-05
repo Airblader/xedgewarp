@@ -92,7 +92,7 @@ void on_xedgewarp_exit(void) {
 }
 
 static void print_usage(char *argv[]) {
-    fprintf(stderr, "Usage: %s [-b] [-m closest|relative] [-l error|debug|trace] [-v] [-h]", argv[0]);
+    fprintf(stderr, "Usage: %s [-b] [-m closest|relative] [-t v|h|both] [-l error|debug|trace] [-v] [-h]", argv[0]);
     fprintf(stderr, "\n");
     fprintf(stderr, "\t-h display the usage and exit\n");
     fprintf(stderr, "\t-v display the version and exit\n");
@@ -157,6 +157,8 @@ void parse_arguments(int argc, char *argv[]) {
                 exit(EXIT_SUCCESS);
                 break;
             case 'h':
+                print_usage(argv);
+                break;
             case ':':
                 switch (optopt) {
                     case 't':
