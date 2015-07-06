@@ -12,8 +12,9 @@
 typedef void (*callback)(void);
 
 /* Forward declarations */
-static void run();
+static void run(void);
 static void safe_fork(callback child_callback);
+static void print_usage(char *argv[]);
 
 Display *display;
 xcb_connection_t *connection;
@@ -22,6 +23,7 @@ xcb_window_t root;
 Config config = {
     .fake_outputs = NULL,
     .warp_mode = WM_CLOSEST,
+    .torus_mode = TM_NONE,
     .log_level = L_ERROR,
     .fork_mode = false
 };
@@ -37,7 +39,7 @@ int main(int argc, char *argv[]) {
     }
 }
 
-static void run() {
+static void run(void) {
     initialize_x11();
     initialize_xedgewarp();
 
@@ -89,12 +91,28 @@ void on_xedgewarp_exit(void) {
     FREE(config.fake_outputs);
 }
 
+static void print_usage(char *argv[]) {
+    fprintf(stderr, "Usage: %s [-b] [-m closest|relative] [-t v|h|both] [-l error|debug|trace] [-v] [-h]", argv[0]);
+    fprintf(stderr, "\n");
+    fprintf(stderr, "\t-h display the usage and exit\n");
+    fprintf(stderr, "\t-v display the version and exit\n");
+    fprintf(stderr, "\t-b run in background mode, i.e. fork on startup\n");
+    fprintf(stderr, "\t-m closest|relative\n"
+                    "\t\tSpecifies how the mouse pointer should be warped.\n");
+    fprintf(stderr, "\t-t [none|v|vertical|h|horizontal|both]\n"
+                    "\t\tConnect the far edges of all outputs as if they were to form a torus shape.\n");
+    fprintf(stderr, "\t-l error|debug|trace\n"
+                   "\t\tSpecify the log level.\n");
+    fprintf(stderr, "\n");
+    exit(EXIT_FAILURE);
+}
+
 /*
  * Parse command-line arguments.
  */
 void parse_arguments(int argc, char *argv[]) {
     int c;
-    while ((c = getopt(argc, argv, "m:l:o:bvh")) != -1) {
+    while ((c = getopt(argc, argv, ":m:t:l:o:bvh")) != -1) {
         switch (c) {
             case 'm':
                 if (strcasecmp(optarg, "closest") == 0)
@@ -103,6 +121,19 @@ void parse_arguments(int argc, char *argv[]) {
                     config.warp_mode = WM_RELATIVE;
                 else
                     bail("Unknown warp mode, bailing out.");
+
+                break;
+            case 't':
+                if (strcasecmp(optarg, "none") == 0)
+                    config.torus_mode = TM_NONE;
+                else if (strcasecmp(optarg, "v") == 0 || strcasecmp(optarg, "vertical") == 0)
+                    config.torus_mode = TM_VERTICAL;
+                else if (strcasecmp(optarg, "h") == 0 || strcasecmp(optarg, "horizontal") == 0)
+                    config.torus_mode = TM_HORIZONTAL;
+                else if (strcasecmp(optarg, "both") == 0 || strcasecmp(optarg, "all") == 0)
+                    config.torus_mode = TM_VERTICAL | TM_HORIZONTAL;
+                else
+                    bail("Unknown torus mode, bailing out.");
 
                 break;
             case 'l':
@@ -126,18 +157,21 @@ void parse_arguments(int argc, char *argv[]) {
                 exit(EXIT_SUCCESS);
                 break;
             case 'h':
+                print_usage(argv);
+                break;
+            case ':':
+                switch (optopt) {
+                    case 't':
+                        /* For torus mode without a value, we use "both". */
+                        config.torus_mode = TM_VERTICAL | TM_HORIZONTAL;
+                        break;
+                    default:
+                        print_usage(argv);
+                        break;
+                }
+                break;
             default:
-                fprintf(stderr, "Usage: %s [-b] [-m closest|relative] [-l error|debug|trace] [-v] [-h]", argv[0]);
-                fprintf(stderr, "\n");
-                fprintf(stderr, "\t-h display the usage and exit\n");
-                fprintf(stderr, "\t-v display the version and exit\n");
-                fprintf(stderr, "\t-b run in background mode, i.e. fork on startup\n");
-                fprintf(stderr, "\t-m closest|relative\n"
-                                "\t\tSpecifies how the mouse pointer should be warped.\n");
-                fprintf(stderr, "\t-l error|debug|trace\n"
-                                "\t\tSpecify the log level.\n");
-                fprintf(stderr, "\n");
-                exit(EXIT_FAILURE);
+                print_usage(argv);
                 break;
         }
     }

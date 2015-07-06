@@ -84,6 +84,13 @@ void randr_query_outputs(void) {
         FREE(output);
     }
 
+    DLOG("Dumping outputs:");
+    Output *output;
+    TAILQ_FOREACH(output, &outputs, outputs) {
+        DLOG("Output %d: %d / %d / %d / %d.", output->id, output->rect.x, output->rect.y,
+            output->rect.width, output->rect.height);
+    }
+
     FREE(reply);
 }
 
@@ -198,6 +205,48 @@ Output *randr_next_output_in_direction(Output *from, position_t pointer, directi
         /* Determine whether this output is better than the one we found
          * already (or, if we have none yet, use it). */
         best = randr_get_output_closer_to(pointer, direction, best, output);
+    }
+
+    return best;
+}
+
+/*
+ * Returns the next output in the given direction assuming the outputs
+ * to form a torus shape, i.e., it will actually look on the far opposite side
+ * of the given direction.
+ */
+Output *randr_cycle_output_in_direction(position_t pointer, direction_t direction) {
+    Output *best = NULL;
+
+    Output *output;
+    TAILQ_FOREACH(output, &outputs, outputs) {
+        switch (direction) {
+            case D_TOP:
+            case D_BOTTOM:
+                if (output->rect.x + output->rect.width <= pointer.x || output->rect.x > pointer.x)
+                    continue;
+
+                if (best == NULL ||
+                        (direction == D_TOP && output->rect.y + output->rect.height > best->rect.y + best->rect.height) ||
+                        (direction == D_BOTTOM && output->rect.y < best->rect.y)) {
+                    best = output;
+                }
+                break;
+            case D_LEFT:
+            case D_RIGHT:
+                if (output->rect.y + output->rect.height <= pointer.y || output->rect.y > pointer.y)
+                    continue;
+
+                if (best == NULL ||
+                        (direction == D_LEFT && output->rect.x + output->rect.width > best->rect.x + best->rect.width) ||
+                        (direction == D_RIGHT && output->rect.x < best->rect.x)) {
+                    best = output;
+                }
+                break;
+            default:
+                ELOG("Unknown direction %d.", direction);
+                return NULL;
+        }
     }
 
     return best;

@@ -88,14 +88,28 @@ void pointer_warp_to_adjacent_output(position_t pointer, direction_t direction) 
     }
 
     Output *output = randr_next_output_in_direction(current, pointer, direction);
+    position_t target;
     if (output == NULL) {
         TLOG("At position %d / %d, there is no more output in direction %d.",
             pointer.x, pointer.y, direction);
-        return;
-    }
+        if (config.torus_mode == TM_NONE ||
+                ((direction == D_LEFT || direction == D_RIGHT) && !(config.torus_mode & TM_HORIZONTAL)) ||
+                ((direction == D_TOP || direction == D_BOTTOM) && !(config.torus_mode & TM_VERTICAL))) {
+            return;
+        }
 
-    /* Determine where the pointer needs to be warped to. */
-    position_t target = pointer_transform_position(pointer, current, output, direction);
+        output = randr_cycle_output_in_direction(pointer, direction);
+        if (output == NULL) {
+            TLOG("At position %d / %d, we cannot cycle to the output in direction %d.",
+                pointer.x, pointer.y, direction);
+            return;
+        }
+
+        TLOG("Found output %d to cycle to.", output->id);
+        target = pointer_transform_cycled_position(pointer, output, direction);
+    } else {
+        target = pointer_transform_position(pointer, current, output, direction);
+    }
 
     /* Let's do the pointer warp, again! */
     xcb_void_cookie_t cookie = xcb_warp_pointer_checked(connection, XCB_NONE, root, 0, 0, 0, 0,
@@ -204,4 +218,31 @@ position_t pointer_transform_position(position_t pointer, Output *from, Output *
             // never reached
             return (position_t) { .x = 0, .y = 0 };
     }
+}
+
+/*
+ * Map the pointer to the correct position if it has to be cycled to the far other
+ * end of all outputs.
+ */
+position_t pointer_transform_cycled_position(position_t pointer, Output *to, direction_t direction) {
+    position_t coordinates = pointer;
+    switch (direction) {
+        case D_TOP:
+            coordinates.y = to->rect.y + to->rect.height - 1;
+            break;
+        case D_BOTTOM:
+            coordinates.y = to->rect.y;
+            break;
+        case D_LEFT:
+            coordinates.x = to->rect.x + to->rect.width - 1;
+            break;
+        case D_RIGHT:
+            coordinates.x = to->rect.x;
+            break;
+        default:
+            ELOG("Unknown direction %d.", direction);
+            break;
+    }
+
+    return coordinates;
 }

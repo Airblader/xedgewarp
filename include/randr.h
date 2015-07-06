@@ -23,3 +23,10 @@ Output *randr_get_output_containing(position_t pointer);
  * The given pointer must lie within the given output.
  */
 Output *randr_next_output_in_direction(Output *from, position_t pointer, direction_t direction);
+
+/**
+ * Returns the next output in the given direction assuming the outputs
+ * to form a torus shape, i.e., it will actually look on the far opposite side
+ * of the given direction.
+ */
+Output *randr_cycle_output_in_direction(position_t pointer, direction_t direction);
