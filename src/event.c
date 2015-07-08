@@ -40,6 +40,10 @@ static void event_register_window_motion(xcb_window_t window) {
     if (config.fake_outputs != NULL)
         return;
 
+    /* For XI2, we only need to register events on the root window. */
+    if (window != root)
+        return;
+
     XIEventMask masks[1];
     unsigned char mask[(XI_LASTEVENT + 7)/8];
 
