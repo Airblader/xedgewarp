@@ -176,6 +176,7 @@ void event_handle_motion(void) {
      * segments in the meantime. If so, we ignore this. */
     if (has_warped) {
         DLOG("Pointer has already been warped, not warping it again.");
+        has_warped = false;
         return;
     }
 
