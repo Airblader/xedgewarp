@@ -3,3 +3,11 @@ obj/*.o
 man/*.1
 man/*.xml
 test/GLOB*
+
+# Vim (https://www.gitignore.io/api/vim)
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+Session.vim
+.netrwhist
+*~
+tags
