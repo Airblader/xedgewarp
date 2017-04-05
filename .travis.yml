@@ -19,5 +19,4 @@ install:
 script:
     - "make all"
     - "sudo make install"
-    - "cd test && xvfb-run ./run.pl"
-    - "cd .."
+    - "make test"
