@@ -36,12 +36,18 @@ xedgewarp is available in the AUR as [xedgewarp-git](https://aur.archlinux.org/p
 
 xedgewarp is make-based. Hence, you can clone the git repository and compile and install it via
 
-````
+```
 git clone https://github.com/Airblader/xedgewarp
 cd xedgewarp
 make
 sudo make install
 ```
+
+### Dependencies
+
+xedgewarp links with the following libraries:
+* [XCB](https://xcb.freedesktop.org/): libxcb-randr, libxcb-util, libxcb
+* [X11](https://xorg.freedesktop.org/): libX11-xcb, libX11, libXi
 
 ## Usage
 
