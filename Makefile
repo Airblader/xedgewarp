@@ -1,4 +1,5 @@
 TARGET = xedgewarp
+VERSION = 1.0
 SDIR = src
 IDIR = include
 ODIR = obj
@@ -30,7 +31,7 @@ $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
 
 $(ODIR)/%.o: $(SDIR)/%.c $(INCS)
-	$(CC) -D'__VERSION="$(shell git describe --all --long --always)"' $(CFLAGS) -o $@ -c $<
+	$(CC) -D'__VERSION="${VERSION}"' $(CFLAGS) -o $@ -c $<
 
 .PHONY: install
 install: $(TARGET)
