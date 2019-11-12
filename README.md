@@ -49,6 +49,8 @@ xedgewarp links with the following libraries:
 * [XCB](https://xcb.freedesktop.org/): libxcb-randr, libxcb-util, libxcb
 * [X11](https://xorg.freedesktop.org/): libX11-xcb, libX11, libXi
 
+Additionally a2x (asciidoc) is required as a compile-time dependency.
+
 ## Usage
 
 See `man xedgewarp` after installation.
