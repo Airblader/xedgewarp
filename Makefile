@@ -12,7 +12,7 @@ MANDIR = $(PREFIX)/share/man/man1
 CC = gcc
 CFLAGS += -I$(IDIR)
 CFLAGS += -std=gnu99 -fcommon
-CFLAGS += -Wall -Wundef -Wshadow
+CFLAGS += -Wall -Wundef -Wshadow -Wformat-security
 LIBS = $(shell pkg-config --libs xcb xcb-randr xcb-aux x11 x11-xcb xi)
 
 INCS = $(wildcard $(IDIR)/*.h)
