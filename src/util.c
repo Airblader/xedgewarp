@@ -8,7 +8,7 @@ void bail(char *message) {
     if (connection != NULL)
         xcb_disconnect(connection);
     ELOG("Received error: %s", message);
-    errx(EXIT_FAILURE, message);
+    errx(EXIT_FAILURE, "%s", message);
 }
 
 /*
