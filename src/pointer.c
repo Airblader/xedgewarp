@@ -59,22 +59,42 @@ direction_t pointer_touches_border(position_t pointer) {
     }
 
     /* Otherwise, we need to check if the border segment is "dead", i.e., there is no
-     * directly neighboring output as in such a case we don't need to do anything. */
-    position_t fake_position = pointer;
-    direction_t direction;
-    if (directions & D_LEFT || directions & D_RIGHT) {
-        direction = directions & D_LEFT ? D_LEFT : D_RIGHT;
-        fake_position.x += direction == D_LEFT ? -1 : 1;
-    } else if (directions & D_TOP || directions & D_BOTTOM) {
-        direction = directions & D_TOP ? D_TOP : D_BOTTOM;
-        fake_position.y += direction == D_TOP ? -1 : 1;
-    } else {
-        bail("Congratulations, you found a bug. Please report it!");
-        /* Never reached */
-        return D_NONE;
+     * directly neighboring output as in such a case we don't need to do anything.
+     * At corners multiple borders may be dead; prefer the one with a reachable neighbor. */
+    Output *current_output = randr_get_output_containing(pointer);
+    direction_t candidates[4] = { D_LEFT, D_RIGHT, D_TOP, D_BOTTOM };
+    /* Fallback if no direction has a reachable neighbor. */
+    direction_t fallback_direction = D_NONE;
+
+    for (int i = 0; i < 4; i++) {
+        direction_t dir = candidates[i];
+        if (!(directions & dir))
+            continue;
+
+        /* Step one pixel in this direction to probe what is there. */
+        position_t fake_position = pointer;
+        switch (dir) {
+            case D_LEFT:   fake_position.x--; break;
+            case D_RIGHT:  fake_position.x++; break;
+            case D_TOP:    fake_position.y--; break;
+            case D_BOTTOM: fake_position.y++; break;
+            default: break;
+        }
+
+        /* If the adjacent pixel is inside an output the border is live —
+         * the pointer can cross naturally, so no warp is needed. */
+        if (randr_get_output_containing(fake_position) != NULL)
+            return D_NONE;
+
+        /* Border is dead. Use this direction if it has an output to warp to. */
+        if (randr_next_output_in_direction(current_output, pointer, dir) != NULL)
+            return dir;
+
+        if (fallback_direction == D_NONE)
+            fallback_direction = dir;
     }
 
-    return randr_get_output_containing(fake_position) == NULL ? direction : D_NONE;
+    return fallback_direction;
 }
 
 /*
