@@ -26,6 +26,7 @@ runs:
           xauth \
           libtest-simple-perl \
           cpanminus \
+          xcb-proto \
           xvfb \
           xserver-xephyr
 
