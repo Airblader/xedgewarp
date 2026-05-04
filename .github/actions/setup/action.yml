@@ -11,6 +11,10 @@ runs:
         sudo apt-get install -y --no-install-recommends \
           pkg-config \
           libxcb1-dev \
+          libxcb-composite0-dev \
+          libxcb-icccm4-dev \
+          libxcb-xinerama0-dev \
+          libxcb-xkb-dev \
           libxcb-randr0-dev \
           libxcb-util-dev \
           libx11-dev \
@@ -19,6 +23,7 @@ runs:
           libxfixes-dev \
           asciidoc \
           xmlto \
+          xauth \
           libtest-simple-perl \
           cpanminus \
           xvfb \
