@@ -30,3 +30,6 @@ jobs:
 
     - name: Build
       run: make
+
+    - name: Install (smoke test)
+      run: make DESTDIR=$PWD/_install install

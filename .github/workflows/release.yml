@@ -46,7 +46,7 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "tag=v$version" >> "$GITHUB_OUTPUT"
 
-      - name: Create and push tag
+      - name: Create annotated tag (local)
         if: github.event_name == 'workflow_dispatch'
         env:
           TAG: ${{ steps.version.outputs.tag }}
@@ -59,16 +59,15 @@ jobs:
             exit 1
           fi
           git tag -a "$TAG" -m "Release $TAG"
-          git push origin "$TAG"
 
       - name: Set up environment
         uses: ./.github/actions/setup
 
-      - name: Build
-        run: make all
-
       - name: Test
         run: make test
+
+      - name: Build manpages
+        run: make mans
 
       - name: Create source tarball
         env:
@@ -81,6 +80,12 @@ jobs:
             --prefix="xedgewarp-${VERSION}/" \
             -o "xedgewarp-${VERSION}.tar.gz" \
             "${TAG}"
+
+      - name: Push annotated tag
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: git push origin "$TAG"
 
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
