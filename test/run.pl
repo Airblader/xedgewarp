@@ -45,7 +45,7 @@ for my $test (@tests) {
     start_x_server;
 
     print "\nRunning $test...\n";
-    my @lines = capture(EXIT_ANY, "/bin/sh -c $test");
+    my @lines = capture(EXIT_ANY, $^X, "-I.", $test);
 
     stop_x_server;
 

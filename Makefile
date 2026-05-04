@@ -51,9 +51,7 @@ $(MANS): %.1: %.man
 
 .PHONY: test
 test: clean $(TARGET)
-	@cd test/; \
-	xvfb-run ./run.pl; \
-	cd ../
+	cd test/ && xvfb-run ./run.pl
 
 .PHONY: clean
 clean:
