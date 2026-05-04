@@ -20,7 +20,9 @@ runs:
           asciidoc \
           xmlto \
           libtest-simple-perl \
-          xvfb
+          cpanminus \
+          xvfb \
+          xserver-xephyr
 
     - name: Cache CPAN modules
       uses: actions/cache@v4
