@@ -9,42 +9,26 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get install -y --no-install-recommends \
-          asciidoc \
-          coreutils \
-          cpanminus \
-          gcc \
-          libanyevent-i3-perl \
-          libanyevent-perl \
-          libdata-dump-perl \
-          libextutils-depends-perl \
-          libextutils-pkgconfig-perl \
-          libinline-perl \
-          libipc-run-perl \
-          libmouse-perl \
-          libmousex-nativetraits-perl \
-          libtest-deep-perl \
-          libtest-differences-perl \
-          libtest-exception-perl \
-          libtest-fatal-perl \
-          libtest-simple-perl \
-          libtest-use-ok-perl \
-          libx11-dev \
-          libx11-xcb-dev \
+          pkg-config \
+          libxcb1-dev \
+          libxcb-composite0-dev \
           libxcb-icccm4-dev \
+          libxcb-xinerama0-dev \
+          libxcb-xkb-dev \
           libxcb-randr0-dev \
           libxcb-util-dev \
-          libxcb-xinerama0-dev \
-          libxcb1-dev \
+          libx11-dev \
+          libx11-xcb-dev \
           libxi-dev \
-          libxml-parser-perl \
-          libxml-simple-perl \
-          libxml-tokeparser-perl \
-          make \
-          pkg-config \
+          libxfixes-dev \
+          asciidoc \
+          xmlto \
           xauth \
+          libtest-simple-perl \
+          cpanminus \
           xcb-proto \
-          xserver-xephyr \
-          xvfb
+          xvfb \
+          xserver-xephyr
 
     - name: Cache CPAN modules
       uses: actions/cache@v4
