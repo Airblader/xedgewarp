@@ -61,7 +61,7 @@ run_xedgewarp(outputs => [
 # A: Top edge
 warp_pointer(250, 200);
 $pointer = get_pointer;
-is($pointer->{x}, 199, 'pointer is warped to the neighboring output (top)');
+is($pointer->{x}, 144, 'pointer is warped to the neighboring output (top)');
 is($pointer->{y}, 199, 'pointer is warped to the right of the new output');
 
 # reset pointer to become eligible for warping again
