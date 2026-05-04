@@ -1,0 +1,60 @@
+name: Set up build & test environment
+description: Install build dependencies, X server tooling, and Perl test modules.
+
+runs:
+  using: composite
+  steps:
+    - name: Install apt packages
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends \
+          asciidoc \
+          coreutils \
+          cpanminus \
+          gcc \
+          libanyevent-i3-perl \
+          libanyevent-perl \
+          libdata-dump-perl \
+          libextutils-depends-perl \
+          libextutils-pkgconfig-perl \
+          libinline-perl \
+          libipc-run-perl \
+          libmouse-perl \
+          libmousex-nativetraits-perl \
+          libtest-deep-perl \
+          libtest-differences-perl \
+          libtest-exception-perl \
+          libtest-fatal-perl \
+          libtest-simple-perl \
+          libtest-use-ok-perl \
+          libx11-dev \
+          libx11-xcb-dev \
+          libxcb-icccm4-dev \
+          libxcb-randr0-dev \
+          libxcb-util-dev \
+          libxcb-xinerama0-dev \
+          libxcb1-dev \
+          libxi-dev \
+          libxml-parser-perl \
+          libxml-simple-perl \
+          libxml-tokeparser-perl \
+          make \
+          pkg-config \
+          xauth \
+          xcb-proto \
+          xserver-xephyr \
+          xvfb
+
+    - name: Cache CPAN modules
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/perl5
+          ~/.cpanm
+        key: cpanm-${{ runner.os }}-x11xcb-ipcsystemsimple-v1
+
+    - name: Install CPAN modules
+      shell: bash
+      run: |
+        sudo cpanm --notest --quiet X11::XCB IPC::System::Simple

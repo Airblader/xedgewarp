@@ -1,4 +1,4 @@
-[![Travis](https://img.shields.io/travis/Airblader/xedgewarp.svg)](https://travis-ci.org/Airblader/xedgewarp)
+[![CI](https://github.com/Airblader/xedgewarp/actions/workflows/ci.yml/badge.svg)](https://github.com/Airblader/xedgewarp/actions/workflows/ci.yml)
 [![Issues](https://img.shields.io/github/issues/Airblader/xedgewarp.svg)](https://github.com/Airblader/xedgewarp/issues)
 [![Forks](https://img.shields.io/github/forks/Airblader/xedgewarp.svg)](https://github.com/Airblader/xedgewarp/network)
 [![Stars](https://img.shields.io/github/stars/Airblader/xedgewarp.svg)](https://github.com/Airblader/xedgewarp/stargazers)
