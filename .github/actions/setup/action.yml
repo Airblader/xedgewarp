@@ -9,40 +9,17 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get install -y --no-install-recommends \
-          asciidoc \
-          coreutils \
-          cpanminus \
-          gcc \
-          libanyevent-i3-perl \
-          libanyevent-perl \
-          libdata-dump-perl \
-          libextutils-depends-perl \
-          libextutils-pkgconfig-perl \
-          libinline-perl \
-          libipc-run-perl \
-          libmouse-perl \
-          libmousex-nativetraits-perl \
-          libtest-deep-perl \
-          libtest-differences-perl \
-          libtest-exception-perl \
-          libtest-fatal-perl \
-          libtest-simple-perl \
-          libx11-dev \
-          libx11-xcb-dev \
-          libxcb-icccm4-dev \
+          pkg-config \
+          libxcb1-dev \
           libxcb-randr0-dev \
           libxcb-util-dev \
-          libxcb-xinerama0-dev \
-          libxcb1-dev \
+          libx11-dev \
+          libx11-xcb-dev \
           libxi-dev \
-          libxml-parser-perl \
-          libxml-simple-perl \
-          libxml-tokeparser-perl \
-          make \
-          pkg-config \
-          xauth \
-          xcb-proto \
-          xserver-xephyr \
+          libxfixes-dev \
+          asciidoc \
+          xmlto \
+          libtest-simple-perl \
           xvfb
 
     - name: Cache CPAN modules
