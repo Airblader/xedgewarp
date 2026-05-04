@@ -27,7 +27,6 @@ runs:
           libtest-exception-perl \
           libtest-fatal-perl \
           libtest-simple-perl \
-          libtest-use-ok-perl \
           libx11-dev \
           libx11-xcb-dev \
           libxcb-icccm4-dev \
